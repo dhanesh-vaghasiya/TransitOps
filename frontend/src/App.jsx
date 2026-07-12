@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-
+import { AuthProvider } from './contexts/AuthContext';
 import VehicleList from './pages/Vehicles/VehicleList';
 import TripsPage from './pages/Trips/index';
 import FuelExpensePage from './pages/FuelExpense/index';
@@ -9,7 +9,6 @@ import Login from './pages/Login';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Drivers from './pages/Drivers';
 import Maintenance from './pages/Maintenance';
-import { AuthProvider } from './contexts/AuthContext';
 
 import Dashboard from './pages/Dashboard/Dashboard';
 
