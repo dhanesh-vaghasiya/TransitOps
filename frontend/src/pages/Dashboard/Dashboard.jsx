@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDashboardKPIs } from '../../hooks/useDashboardKPIs';
 import FilterBar from '../../components/common/FilterBar';
+import Select from '../../components/ui/Select';
 import BentoStatCard from '../../components/common/BentoStatCard';
 import DataTable from '../../components/common/DataTable';
 import StatusPill from '../../components/common/StatusPill';
@@ -60,29 +61,29 @@ const Dashboard = () => {
         <div className="flex gap-4">
           <div className="space-y-1">
             <label className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">VEHICLE TYPE</label>
-            <select
+            <Select
               value={filters.type || ''}
               onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-              className="bg-surface-container-high text-on-surface text-body-sm rounded-lg border border-outline focus:ring-primary block p-2 outline-none w-40"
+              className="w-40"
             >
               <option value="">All Vehicles</option>
               {typeOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </select>
+            </Select>
           </div>
           <div className="space-y-1">
             <label className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">STATUS</label>
-            <select
+            <Select
               value={filters.status || ''}
               onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-              className="bg-surface-container-high text-on-surface text-body-sm rounded-lg border border-outline focus:ring-primary block p-2 outline-none w-40"
+              className="w-40"
             >
               <option value="">All Statuses</option>
               {statusOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
       </div>
@@ -137,17 +138,15 @@ const Dashboard = () => {
               <div className="glass-panel rounded-xl p-5">
                 <h3 className="text-body-lg font-bold text-on-background font-outfit mb-4">Vehicle Type Distribution</h3>
                 <div className="flex items-center">
-                  <div className="w-24 h-24 relative shrink-0">
+                  <div className="w-24 h-24 relative shrink-0 flex items-center justify-center">
                     <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-on-background z-10">100%</div>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
-                        <Pie cx="50%" cy="50%" data={distributionData} innerRadius={28} outerRadius={40} dataKey="value" stroke="none">
-                          {distributionData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                          ))}
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
+                    <PieChart width={90} height={90}>
+                      <Pie cx={45} cy={45} data={distributionData} innerRadius={30} outerRadius={42} dataKey="value" stroke="none">
+                        {distributionData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                        ))}
+                      </Pie>
+                    </PieChart>
                   </div>
                   <div className="flex-1 ml-6 space-y-3">
                     {distributionData.length === 0 ? (

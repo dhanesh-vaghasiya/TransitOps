@@ -1,8 +1,10 @@
 import React from 'react';
 import StatusPill from '../../components/ui/StatusPill';
 import GlassCard from '../../components/ui/GlassCard';
+import { useSettings } from '../../contexts/SettingsContext';
 
 const TripCard = ({ trip, onOpenDetail }) => {
+  const { formatDistance } = useSettings();
   const formatDate = (d) => {
     if (!d) return '—';
     return new Date(d).toLocaleString('en-IN', {
@@ -50,7 +52,7 @@ const TripCard = ({ trip, onOpenDetail }) => {
         {/* Distance */}
         <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container text-body-sm text-on-surface-variant border border-outline-variant">
           <span className="material-symbols-outlined text-[13px]">straighten</span>
-          <span>{parseFloat(trip.plannedDistance).toFixed(0)} km</span>
+          <span>{formatDistance(trip.plannedDistance)}</span>
         </div>
       </div>
 

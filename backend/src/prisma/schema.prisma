@@ -262,8 +262,20 @@ model Settings {
   depotName    String   @map("depot_name") @db.VarChar(255)
   currency     String   @db.VarChar(10)
   distanceUnit String   @map("distance_unit") @db.VarChar(10)
+  rbacMatrix   Json?    @map("rbac_matrix")
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@map("settings")
 }
+
+model SecurityLog {
+  id        Int      @id @default(autoincrement())
+  action    String   @db.VarChar(255)
+  details   String   @db.Text
+  userId    Int?     @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("security_logs")
+}
+

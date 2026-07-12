@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getDispatchPool, createTrip, dispatchTrip } from '../../services/tripService';
 import GlassCard from '../../components/ui/GlassCard';
+import { useSettings } from '../../contexts/SettingsContext';
+import Select from '../../components/ui/Select';
 
 const STEPS = ['Draft', 'Dispatched', 'Completed'];
 
@@ -62,6 +64,7 @@ const INITIAL_FORM = {
 };
 
 const TripForm = ({ onCreated }) => {
+  const { settings } = useSettings();
   const [form, setForm] = useState(INITIAL_FORM);
   const [pool, setPool] = useState({ vehicles: [], drivers: [] });
   const [poolLoading, setPoolLoading] = useState(true);
@@ -255,7 +258,7 @@ const TripForm = ({ onCreated }) => {
             />
           </div>
           <div>
-            <label htmlFor="plannedDistance" className={labelClass}>Distance (km)</label>
+            <label htmlFor="plannedDistance" className={labelClass}>Distance ({settings?.distanceUnit || 'km'})</label>
             <input
               id="plannedDistance"
               name="plannedDistance"
@@ -276,14 +279,14 @@ const TripForm = ({ onCreated }) => {
         {/* Vehicle */}
         <div>
           <label htmlFor="vehicleId" className={labelClass}>Vehicle</label>
-          <select
+          <Select
             id="vehicleId"
             name="vehicleId"
             value={form.vehicleId}
             onChange={handleChange}
             disabled={!!draftTrip || poolLoading || !isBaseInfoFilled}
             required
-            className={inputClass}
+            className="w-full"
             data-element-id="trip-vehicle-select"
           >
             <option value="">
@@ -294,20 +297,20 @@ const TripForm = ({ onCreated }) => {
                 {v.name} — {v.registrationNumber} (max {v.maxLoadCapacity} kg)
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         {/* Driver */}
         <div>
           <label htmlFor="driverId" className={labelClass}>Driver</label>
-          <select
+          <Select
             id="driverId"
             name="driverId"
             value={form.driverId}
             onChange={handleChange}
             disabled={!!draftTrip || poolLoading || !form.vehicleId}
             required
-            className={inputClass}
+            className="w-full"
             data-element-id="trip-driver-select"
           >
             <option value="">
@@ -318,7 +321,7 @@ const TripForm = ({ onCreated }) => {
                 {d.name} — {d.licenseCategory ? d.licenseCategory.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : ''} Lic. (Score: {d.safetyScore})
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         {/* Capacity error block */}

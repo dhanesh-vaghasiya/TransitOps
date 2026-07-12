@@ -13,8 +13,8 @@ const app = express();
 // Security HTTP headers
 app.use(helmet());
 
-// CORS
-app.use(cors({ origin: env.CLIENT_URL }));
+// CORS - allow all in dev, specific in prod
+app.use(cors({ origin: env.NODE_ENV === 'development' ? '*' : env.CLIENT_URL }));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -46,6 +46,7 @@ app.use('/api/v1/maintenance', require('./modules/maintenance/routes'));
 app.use('/api/v1/fuel', require('./modules/fuel/routes'));
 app.use('/api/v1/fuel-logs', require('./modules/fuel/routes'));
 app.use('/api/v1/expenses', require('./modules/expense/routes'));
+app.use('/api/v1/settings', require('./modules/settings/routes'));
 app.use('/api/v1/reports', require('./modules/report/routes'));
 
 // Error middleware should be mounted last

@@ -8,8 +8,16 @@ import { getFuelLogs, createFuelLog } from '../../services/fuelService';
 import { getExpenses, createExpense } from '../../services/expenseService';
 import { getVehicles } from '../../services/vehicleService';
 import { getTrips } from '../../services/tripService';
+import { useSettings } from '../../contexts/SettingsContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { hasMutationAccess } from '../../utils/rbac';
+import Select from '../../components/ui/Select';
 
 const FuelExpensePage = () => {
+  const { formatCurrency, formatDistance, settings } = useSettings();
+  const { user } = useAuth();
+  const canMutate = hasMutationAccess(user?.roles, 'fuel');
+
   const [fuelLogs, setFuelLogs] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [vehicles, setVehicles] = useState([]);
@@ -170,11 +178,6 @@ const FuelExpensePage = () => {
     }
   };
 
-  // Format currency
-  const formatCurrency = (val) => {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(val);
-  };
-
   // Format datetime
   const formatDateTime = (val) => {
     if (!val) return '—';
@@ -293,9 +296,9 @@ const FuelExpensePage = () => {
   ];
 
   const inputClass =
-    'w-full bg-surface-container-low border border-outline-variant text-on-surface text-body-md rounded-lg px-3 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/40 transition-all placeholder:text-on-surface-variant/50';
+    'w-full px-4 py-2 bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/50 text-on-surface transition-all';
 
-  const labelClass = 'block text-label-caps text-on-surface-variant uppercase tracking-widest mb-1';
+  const labelClass = 'block text-sm font-medium text-on-surface-variant mb-1';
 
   return (
     <div className="h-full space-y-6">
@@ -311,22 +314,32 @@ const FuelExpensePage = () => {
           </p>
         </div>
         <div className="flex gap-3">
-          <button
-            onClick={() => setIsFuelModalOpen(true)}
-            className="px-4 py-2.5 rounded-lg bg-surface-container border border-outline-variant text-on-surface font-medium hover:border-primary/50 hover:bg-surface-container-high transition-all flex items-center gap-2 active:scale-98"
-            id="log-fuel-btn"
-          >
-            <span className="material-symbols-outlined text-[18px] text-primary">local_gas_station</span>
-            Log Fuel
-          </button>
-          <button
-            onClick={() => setIsExpenseModalOpen(true)}
-            className="px-4 py-2.5 rounded-lg bg-primary text-on-primary font-medium hover:opacity-90 transition-all flex items-center gap-2 active:scale-98"
-            id="add-expense-btn"
-          >
-            <span className="material-symbols-outlined text-[18px]">add_circle</span>
-            Add Expense
-          </button>
+          {!canMutate && (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant text-on-surface-variant text-[10px] uppercase font-bold tracking-wider">
+              <span className="material-symbols-outlined text-[14px]">visibility</span>
+              View Only
+            </span>
+          )}
+          {canMutate && (
+            <>
+              <button
+                onClick={() => setIsFuelModalOpen(true)}
+                className="px-4 py-2.5 rounded-lg bg-surface-container border border-outline-variant text-on-surface font-medium hover:border-primary/50 hover:bg-surface-container-high transition-all flex items-center gap-2 active:scale-98"
+                id="log-fuel-btn"
+              >
+                <span className="material-symbols-outlined text-[18px] text-primary">local_gas_station</span>
+                Log Fuel
+              </button>
+              <button
+                onClick={() => setIsExpenseModalOpen(true)}
+                className="px-4 py-2.5 rounded-lg bg-primary text-on-primary font-medium hover:opacity-90 transition-all flex items-center gap-2 active:scale-98"
+                id="add-expense-btn"
+              >
+                <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                Add Expense
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -358,7 +371,7 @@ const FuelExpensePage = () => {
 
         {/* Right Column: Efficiency Index (1/3 width) */}
         <div className="col-span-1">
-          <GlassPanel className="p-5 h-full flex flex-col justify-between border-primary/20 bg-gradient-to-b from-primary/5 to-transparent">
+          <GlassPanel className="p-5 h-full flex flex-col justify-between border-primary/20 bg-linear-to-b from-primary/5 to-transparent">
             <div>
               <div className="flex items-center justify-between mb-4 border-b border-outline-variant/30 pb-3">
                 <div className="flex items-center gap-2">
@@ -370,7 +383,7 @@ const FuelExpensePage = () => {
               <div className="py-6 text-center">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Fleet Odo Efficiency</span>
                 <div className="text-[52px] font-outfit font-bold text-primary tracking-tight my-1 select-none active-glow rounded-xl py-2 bg-surface-bright/20 border border-outline-variant/20 inline-block px-6">
-                  {averageEfficiency} <span className="text-title-sm font-normal text-on-surface-variant font-inter">km/L</span>
+                  {averageEfficiency} <span className="text-title-sm font-normal text-on-surface-variant font-inter">{settings?.distanceUnit || 'km'}/L</span>
                 </div>
                 <div className="flex items-center justify-center gap-1.5 mt-2">
                   <span className="material-symbols-outlined text-emerald-400 text-[16px]">trending_up</span>
@@ -439,7 +452,7 @@ const FuelExpensePage = () => {
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-surface-container-high border border-primary/30 flex items-center gap-4 glow-orange bg-gradient-to-r from-primary/10 to-transparent">
+        <div className="p-4 rounded-xl bg-surface-container-high border border-primary/30 flex items-center gap-4 glow-orange bg-linear-to-r from-primary/10 to-transparent">
           <div className="w-10 h-10 rounded-lg bg-primary text-on-primary flex items-center justify-center">
             <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
           </div>
@@ -460,29 +473,29 @@ const FuelExpensePage = () => {
         <form onSubmit={handleFuelSubmit} className="space-y-4" id="fuel-form">
           <div>
             <label htmlFor="fuel-vehicleId" className={labelClass}>Vehicle</label>
-            <select
+            <Select
               id="fuel-vehicleId"
               value={fuelForm.vehicleId}
               onChange={(e) => setFuelForm({ ...fuelForm, vehicleId: e.target.value, tripId: '' })}
               required
-              className={inputClass}
+              className="w-full"
             >
               <option value="">Select Vehicle</option>
               {vehicles.map((v) => (
                 <option key={v.id} value={v.id}>
-                  {v.name} ({v.registrationNumber}) — Odo: {parseFloat(v.odometer).toFixed(0)} km
+                  {v.name} ({v.registrationNumber}) — Odo: {formatDistance(v.odometer)}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>
             <label htmlFor="fuel-tripId" className={labelClass}>Linked Trip (Optional)</label>
-            <select
+            <Select
               id="fuel-tripId"
               value={fuelForm.tripId}
               onChange={(e) => setFuelForm({ ...fuelForm, tripId: e.target.value })}
-              className={inputClass}
+              className="w-full"
               disabled={!fuelForm.vehicleId}
             >
               <option value="">No Linked Trip / Independent</option>
@@ -491,7 +504,7 @@ const FuelExpensePage = () => {
                   {t.tripNumber} ({t.source} → {t.destination}) [{t.status}]
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -526,7 +539,7 @@ const FuelExpensePage = () => {
           </div>
 
           <div>
-            <label htmlFor="fuel-odometerReading" className={labelClass}>Current Odometer (km)</label>
+            <label htmlFor="fuel-odometerReading" className={labelClass}>Current Odometer ({settings?.distanceUnit || 'km'})</label>
             <input
               id="fuel-odometerReading"
               type="number"
@@ -569,23 +582,22 @@ const FuelExpensePage = () => {
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={fuelSubmitting}
-            className="w-full py-2.5 rounded-lg bg-primary text-on-primary font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            {fuelSubmitting ? (
-              <>
-                <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
-                Logging Entry…
-              </>
-            ) : (
-              <>
-                <span className="material-symbols-outlined text-[18px]">save</span>
-                Log Fuel Entry
-              </>
-            )}
-          </button>
+          <div className="pt-4 flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => setIsFuelModalOpen(false)}
+              className="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={fuelSubmitting}
+              className="px-4 py-2 text-sm font-medium bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              {fuelSubmitting ? 'Logging...' : 'Log Fuel Entry'}
+            </button>
+          </div>
         </form>
       </Modal>
 
@@ -599,29 +611,29 @@ const FuelExpensePage = () => {
         <form onSubmit={handleExpenseSubmit} className="space-y-4" id="expense-form">
           <div>
             <label htmlFor="expense-category" className={labelClass}>Category</label>
-            <select
+            <Select
               id="expense-category"
               value={expenseForm.category}
               onChange={(e) => setExpenseForm({ ...expenseForm, category: e.target.value })}
               required
-              className={inputClass}
+              className="w-full"
             >
               <option value="toll">Toll Fees</option>
               <option value="parking">Parking</option>
               <option value="fine">Fines</option>
               <option value="insurance">Insurance</option>
               <option value="other">Misc / Other</option>
-            </select>
+            </Select>
           </div>
 
           <div>
             <label htmlFor="expense-vehicleId" className={labelClass}>Vehicle</label>
-            <select
+            <Select
               id="expense-vehicleId"
               value={expenseForm.vehicleId}
               onChange={(e) => setExpenseForm({ ...expenseForm, vehicleId: e.target.value, tripId: '' })}
               required
-              className={inputClass}
+              className="w-full"
             >
               <option value="">Select Vehicle</option>
               {vehicles.map((v) => (
@@ -629,16 +641,16 @@ const FuelExpensePage = () => {
                   {v.name} ({v.registrationNumber})
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>
             <label htmlFor="expense-tripId" className={labelClass}>Linked Trip (Optional)</label>
-            <select
+            <Select
               id="expense-tripId"
               value={expenseForm.tripId}
               onChange={(e) => setExpenseForm({ ...expenseForm, tripId: e.target.value })}
-              className={inputClass}
+              className="w-full"
               disabled={!expenseForm.vehicleId}
             >
               <option value="">No Linked Trip / Independent</option>
@@ -647,7 +659,7 @@ const FuelExpensePage = () => {
                   {t.tripNumber} ({t.source} → {t.destination}) [{t.status}]
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>
@@ -685,23 +697,22 @@ const FuelExpensePage = () => {
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={expenseSubmitting}
-            className="w-full py-2.5 rounded-lg bg-primary text-on-primary font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            {expenseSubmitting ? (
-              <>
-                <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
-                Submitting Request…
-              </>
-            ) : (
-              <>
-                <span className="material-symbols-outlined text-[18px]">save</span>
-                Add Expense Request
-              </>
-            )}
-          </button>
+          <div className="pt-4 flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => setIsExpenseModalOpen(false)}
+              className="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={expenseSubmitting}
+              className="px-4 py-2 text-sm font-medium bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              {expenseSubmitting ? 'Submitting...' : 'Add Expense Request'}
+            </button>
+          </div>
         </form>
       </Modal>
     </div>

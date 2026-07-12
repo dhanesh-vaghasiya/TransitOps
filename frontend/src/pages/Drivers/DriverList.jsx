@@ -4,6 +4,8 @@ import SegmentedControl from '../../components/common/SegmentedControl';
 import DataTable from '../../components/common/DataTable';
 import StatusPill from '../../components/common/StatusPill';
 import DriverForm from './DriverForm';
+import { useAuth } from '../../contexts/AuthContext';
+import { hasMutationAccess } from '../../utils/rbac';
 
 const filterOptions = [
   { label: 'All', value: 'all' },
@@ -24,6 +26,9 @@ const DriverList = () => {
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingDriver, setEditingDriver] = useState(null);
+
+  const { user } = useAuth();
+  const canMutate = hasMutationAccess(user?.roles, 'drivers');
 
   const fetchDrivers = async () => {
     try {
@@ -71,8 +76,8 @@ const DriverList = () => {
             {row.name.charAt(0)}
           </div>
           <div>
-            <div className="font-medium text-white">{row.name}</div>
-            <div className="text-xs text-gray-400">{row.contactNumber}</div>
+            <div className="font-medium text-on-surface">{row.name}</div>
+            <div className="text-xs text-on-surface-variant">{row.contactNumber}</div>
           </div>
         </div>
       )
@@ -84,8 +89,8 @@ const DriverList = () => {
         const expired = isLicenseExpired(row.licenseExpiry);
         return (
           <div>
-            <div className="font-mono text-gray-200">{row.licenseNumber} <span className="text-xs text-gray-400">({row.licenseCategory ? row.licenseCategory.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : ''})</span></div>
-            <div className={`text-xs ${expired ? 'text-red-400 font-medium' : 'text-gray-400'}`}>
+            <div className="font-mono text-on-surface">{row.licenseNumber} <span className="text-xs text-on-surface-variant">({row.licenseCategory ? row.licenseCategory.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : ''})</span></div>
+            <div className={`text-xs ${expired ? 'text-red-500 font-medium' : 'text-on-surface-variant'}`}>
               Expires: {new Date(row.licenseExpiry).toLocaleDateString()}
               {expired && ' (EXPIRED)'}
             </div>
@@ -99,9 +104,9 @@ const DriverList = () => {
       cell: (row) => (
         <div className="w-32">
           <div className="flex justify-between text-xs mb-1">
-            <span className={row.safetyScore < 80 ? 'text-red-400' : 'text-green-400'}>{row.safetyScore}/100</span>
+            <span className={row.safetyScore < 80 ? 'text-red-500 font-medium' : 'text-green-500 font-medium'}>{row.safetyScore}/100</span>
           </div>
-          <div className="h-1.5 w-full bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
             <div
               className={`h-full ${row.safetyScore < 80 ? 'bg-red-500' : 'bg-green-500'}`}
               style={{ width: `${Math.min(row.safetyScore, 100)}%` }}
@@ -121,22 +126,32 @@ const DriverList = () => {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Driver Management</h1>
-          <p className="text-gray-400 text-sm">
+          <h1 className="text-3xl font-bold text-on-surface mb-2">Driver Management</h1>
+          <p className="text-on-surface-variant text-sm">
             <span className="inline-block w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
             Note: Drivers with suspended status or expired licenses are automatically excluded from the dispatch pool.
           </p>
         </div>
 
-        <button
-          onClick={() => setIsFormOpen(true)}
-          className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 flex items-center gap-2"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Add Driver
-        </button>
+        <div className="flex gap-2">
+          {!canMutate && (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant text-on-surface-variant text-body-sm">
+              <span className="material-symbols-outlined text-[16px]">visibility</span>
+              View Only
+            </span>
+          )}
+          {canMutate && (
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Add Driver
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="mb-6 flex justify-start">
@@ -156,7 +171,7 @@ const DriverList = () => {
           <DataTable
             columns={columns}
             data={filteredDrivers}
-            onRowClick={handleEdit}
+            onRowClick={canMutate ? handleEdit : undefined}
           />
         )}
       </div>
