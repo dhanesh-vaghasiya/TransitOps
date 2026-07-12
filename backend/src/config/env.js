@@ -6,6 +6,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   CLIENT_URL: z.string().url().default('http://localhost:5173'),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  JWT_SECRET: z.string().default('supersecretjwtkeythatisatleast32charslong'),
 });
 
 const _env = envSchema.safeParse(process.env);
