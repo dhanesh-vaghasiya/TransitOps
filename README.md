@@ -10,12 +10,17 @@ TransitOps is an end-to-end transport operations platform with a React SPA front
 
 ## 1. Project Setup
 
-Clone the repository and install dependencies from the root directory:
+Clone the repository and install dependencies for both the frontend and backend:
 
 ```bash
-npm run install:all
+# Terminal 1 - Backend Setup
+cd backend
+npm install
+
+# Terminal 2 - Frontend Setup
+cd ../frontend
+npm install
 ```
-*(Note: This runs `npm install` inside both the `frontend` and `backend` directories. We do not keep a `node_modules` folder in the root directory to ensure the separated environments remain clean).*
 
 ## 2. Environment Configuration
 
