@@ -57,12 +57,12 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-surface border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
-        <div className="p-6 border-b border-white/10 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-white">
+      <div className="w-full max-w-md bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden">
+        <div className="p-6 border-b border-outline-variant flex justify-between items-center">
+          <h2 className="text-xl font-bold text-on-surface">
             {driver ? 'Edit Driver' : 'Add New Driver'}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
+          <button onClick={onClose} className="text-on-surface-variant hover:text-on-surface transition-colors">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -77,31 +77,31 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
           )}
           
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">Full Name</label>
             <input
               type="text"
               name="name"
               required
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white"
+              className="w-full px-4 py-2 bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/50 text-on-surface transition-all"
             />
           </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">License Number</label>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">License Number</label>
               <input
                 type="text"
                 name="licenseNumber"
                 required
                 value={formData.licenseNumber}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white"
+                className="w-full px-4 py-2 bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/50 text-on-surface transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Category</label>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">Category</label>
               <Select
                 name="licenseCategory"
                 value={formData.licenseCategory}
@@ -124,7 +124,7 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Expiry Date</label>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">Expiry Date</label>
               <input
                 type="date"
                 name="licenseExpiry"
@@ -132,24 +132,24 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
                 max="2100-12-31"
                 value={formData.licenseExpiry}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white"
+                className="w-full px-4 py-2 bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/50 text-on-surface transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Contact Number</label>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">Contact Number</label>
               <input
                 type="text"
                 name="contactNumber"
                 value={formData.contactNumber}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white"
+                className="w-full px-4 py-2 bg-surface-container border border-outline-variant rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/50 text-on-surface transition-all"
               />
             </div>
           </div>
           
           {driver && (
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Status</label>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">Status</label>
               <Select
                 name="status"
                 value={formData.status}
@@ -168,7 +168,7 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+              className="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors"
             >
               Cancel
             </button>

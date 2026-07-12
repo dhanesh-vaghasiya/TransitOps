@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-const Select = ({ value, onChange, children, className = "", id, required, disabled }) => {
+const Select = ({ value, onChange, name, children, className = "", id, required, disabled }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -37,7 +37,7 @@ const Select = ({ value, onChange, children, className = "", id, required, disab
   return (
     <div className={`relative ${className.replace('p-2', '').replace('p-2.5', '').replace('py-2', '').replace('px-3', '')}`} ref={dropdownRef}>
       <div 
-        className={`flex items-center justify-between w-full bg-surface-container-low/40 backdrop-blur-xl border border-white/10 text-on-surface text-body-sm rounded-xl px-4 py-2.5 cursor-pointer transition-all shadow-sm group ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-surface-container/60 hover:border-white/20'}`}
+        className={`flex items-center justify-between w-full bg-surface-container-low/40 backdrop-blur-xl border border-outline-variant text-on-surface text-body-sm rounded-xl px-4 py-2.5 cursor-pointer transition-all shadow-sm group ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-surface-container/60 hover:border-outline'}`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
         id={id}
       >
@@ -48,18 +48,18 @@ const Select = ({ value, onChange, children, className = "", id, required, disab
       </div>
       
       {isOpen && !disabled && (
-        <div className="absolute z-99 w-full mt-2 bg-[#271e18]/90 backdrop-blur-3xl border border-white/10 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden animate-fade-in origin-top left-0">
+        <div className="absolute z-50 w-full mt-2 bg-surface/90 backdrop-blur-3xl border border-outline-variant rounded-xl shadow-xl overflow-hidden animate-fade-in origin-top left-0">
           <div className="max-h-60 overflow-y-auto py-1">
             {options.map((opt, i) => (
               <div
                 key={String(opt.value) + i}
                 className={`px-4 py-2.5 text-body-sm cursor-pointer transition-colors ${
                   String(value) === String(opt.value)
-                    ? 'bg-primary/20 text-primary font-bold' 
-                    : 'text-on-surface hover:bg-white/10 hover:text-on-background'
+                    ? 'bg-primary/10 text-primary font-bold' 
+                    : 'text-on-surface hover:bg-surface-hover hover:text-on-background'
                 }`}
                 onClick={() => {
-                  if (onChange) onChange({ target: { value: opt.value } });
+                  if (onChange) onChange({ target: { name, value: opt.value } });
                   setIsOpen(false);
                 }}
               >

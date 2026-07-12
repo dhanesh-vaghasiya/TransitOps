@@ -70,7 +70,7 @@ const Login = () => {
 
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             {error && (
-              <div className="animate-in fade-in slide-in-from-top-2 p-4 bg-danger/10 border border-danger/20 text-danger rounded-lg text-sm flex items-center">
+              <div className="animate-in fade-in slide-in-from-top-2 p-4 border rounded-lg text-sm flex items-center font-medium" style={{ backgroundColor: 'rgba(255, 50, 50, 0.15)', borderColor: 'rgba(255, 50, 50, 0.3)', color: '#ff6b6b' }}>
                 <span className="mr-2">⚠️</span>
                 {error}
               </div>
