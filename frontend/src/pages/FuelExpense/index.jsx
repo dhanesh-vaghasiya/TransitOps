@@ -382,7 +382,7 @@ const FuelExpensePage = () => {
               
               <div className="py-6 text-center">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Fleet Odo Efficiency</span>
-                <div className="text-[52px] font-outfit font-bold text-primary tracking-tight my-1 select-none active-glow rounded-xl py-2 bg-surface-bright/20 border border-outline-variant/20 inline-block px-6">
+                <div className="text-[40px] font-outfit font-bold text-primary tracking-tight my-1 select-none active-glow rounded-xl py-1.5 bg-surface-bright/20 border border-outline-variant/20 inline-block px-4">
                   {averageEfficiency} <span className="text-title-sm font-normal text-on-surface-variant font-inter">{settings?.distanceUnit || 'km'}/L</span>
                 </div>
                 <div className="flex items-center justify-center gap-1.5 mt-2">

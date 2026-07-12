@@ -32,10 +32,7 @@ const Navbar = () => {
             {theme === 'dark' ? 'light_mode' : 'dark_mode'}
           </span>
         </button>
-        <button className="relative text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-xl hover:bg-surface-container/30">
-          <span className="material-symbols-outlined">notifications</span>
-          <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error border-2 border-[#150c07] rounded-full shimmer-glow"></span>
-        </button>
+
         <div 
           className="bg-surface-container/40 backdrop-blur-md border border-white/5 text-primary pl-2 pr-4 py-1.5 rounded-xl text-body-sm font-medium flex items-center gap-3 cursor-pointer hover:bg-surface-container/60 hover:pr-8 transition-all duration-300 shadow-sm group relative w-auto overflow-hidden"
           onClick={handleLogout}

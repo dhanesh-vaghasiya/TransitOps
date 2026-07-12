@@ -26,7 +26,7 @@ const Select = ({ value, onChange, name, children, className = "", id, required,
       }
       options.push({
         value: child.props.value !== undefined ? child.props.value : child.props.children,
-        label: child.props.children
+        label: label
       });
     }
   });
@@ -36,6 +36,18 @@ const Select = ({ value, onChange, name, children, className = "", id, required,
   // Base style matches the polished macOS look we gave to other components
   return (
     <div className={`relative ${className.replace('p-2', '').replace('p-2.5', '').replace('py-2', '').replace('px-3', '')}`} ref={dropdownRef}>
+      {/* Hidden native select for HTML5 validation (required) */}
+      <select
+        name={name}
+        value={value}
+        required={required}
+        className="absolute inset-0 w-full h-full opacity-0 pointer-events-none"
+        tabIndex={-1}
+        onChange={() => {}}
+      >
+        <option value={value || ""}>{selectedOption ? selectedOption.label : ""}</option>
+      </select>
+
       <div 
         className={`flex items-center justify-between w-full bg-surface-container-low/40 backdrop-blur-xl border border-outline-variant text-on-surface text-body-sm rounded-xl px-4 py-2.5 cursor-pointer transition-all shadow-sm group ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-surface-container/60 hover:border-outline'}`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
