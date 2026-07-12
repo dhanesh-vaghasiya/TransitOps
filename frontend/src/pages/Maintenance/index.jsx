@@ -5,6 +5,7 @@ import DataTable from '../../components/common/DataTable';
 import StatusPill from '../../components/common/StatusPill';
 import { Wrench, HeartPulse, Info } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { hasMutationAccess } from '../../utils/rbac';
 import Select from '../../components/ui/Select';
 
 const maintenanceTypeOptions = [
@@ -37,7 +38,8 @@ const Maintenance = () => {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const { user } = useAuth(); // If RBAC is needed
+  const { user } = useAuth();
+  const canMutate = hasMutationAccess(user?.roles, 'maintenance');
 
   useEffect(() => {
     fetchData();
@@ -140,6 +142,12 @@ const Maintenance = () => {
             <div className="flex items-center gap-2 mb-4 text-primary">
               <Wrench size={20} />
               <h2 className="text-title-lg font-semibold font-outfit">Log Service Record</h2>
+              {!canMutate && (
+                <span className="ml-auto flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container border border-outline-variant text-on-surface-variant text-[10px] uppercase font-bold tracking-wider">
+                  <span className="material-symbols-outlined text-[14px]">visibility</span>
+                  View Only
+                </span>
+              )}
             </div>
 
             {error && <div className="text-error bg-error-container p-3 rounded mb-4 text-sm">{error}</div>}
@@ -229,7 +237,12 @@ const Maintenance = () => {
 
               <button 
                 type="submit" 
-                className="w-full bg-primary hover:bg-primary-container text-on-primary hover:text-on-primary-container py-2.5 rounded-lg font-medium transition-colors shadow-lg active-glow"
+                disabled={!canMutate}
+                className={`w-full py-2.5 rounded-lg font-medium transition-colors shadow-lg active-glow ${
+                  canMutate 
+                    ? 'bg-primary hover:bg-primary-container text-on-primary hover:text-on-primary-container' 
+                    : 'bg-surface-container text-on-surface-variant opacity-50 cursor-not-allowed'
+                }`}
               >
                 Save Record
               </button>
@@ -255,7 +268,7 @@ const Maintenance = () => {
                 <DataTable 
                   columns={columns} 
                   data={logs} 
-                  onAction={(row) => handleComplete(row)}
+                  onAction={canMutate ? (row) => handleComplete(row) : undefined}
                 />
               )}
             </div>

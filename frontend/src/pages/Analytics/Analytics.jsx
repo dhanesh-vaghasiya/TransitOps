@@ -76,14 +76,6 @@ const Analytics = () => {
             </div>
             <p className="text-label-caps text-on-surface-variant mb-1">Fuel Efficiency</p>
             <h3 className="text-headline-md font-bold text-on-surface">{kpis.fuelEfficiency}</h3>
-            <div className="mt-4 h-12 w-full flex items-end gap-1">
-              <div className="flex-1 bg-emerald-500/20 rounded-t-sm h-6 group-hover:h-8 transition-all"></div>
-              <div className="flex-1 bg-emerald-500/20 rounded-t-sm h-4 group-hover:h-6 transition-all"></div>
-              <div className="flex-1 bg-emerald-500/20 rounded-t-sm h-7 group-hover:h-9 transition-all"></div>
-              <div className="flex-1 bg-emerald-500/40 rounded-t-sm h-5 group-hover:h-7 transition-all"></div>
-              <div className="flex-1 bg-emerald-500/60 rounded-t-sm h-9 group-hover:h-12 transition-all"></div>
-              <div className="flex-1 bg-emerald-500 rounded-t-sm h-8 group-hover:h-10 transition-all"></div>
-            </div>
           </div>
 
           {/* Fleet Utilization */}
@@ -95,14 +87,6 @@ const Analytics = () => {
             </div>
             <p className="text-label-caps text-on-surface-variant mb-1">Fleet Utilization</p>
             <h3 className="text-headline-md font-bold text-on-surface">{kpis.fleetUtilization}</h3>
-            <div className="mt-4 h-12 w-full flex items-end gap-1">
-              <div className="flex-1 bg-blue-500/20 rounded-t-sm h-8"></div>
-              <div className="flex-1 bg-blue-500/20 rounded-t-sm h-9"></div>
-              <div className="flex-1 bg-blue-500/40 rounded-t-sm h-10"></div>
-              <div className="flex-1 bg-blue-500/60 rounded-t-sm h-8"></div>
-              <div className="flex-1 bg-blue-500/80 rounded-t-sm h-11"></div>
-              <div className="flex-1 bg-blue-500 rounded-t-sm h-12"></div>
-            </div>
           </div>
 
           {/* Op Cost */}
@@ -114,14 +98,6 @@ const Analytics = () => {
             </div>
             <p className="text-label-caps text-on-surface-variant mb-1">Total Op Cost</p>
             <h3 className="text-headline-md font-bold text-on-surface">{kpis.operationalCost}</h3>
-            <div className="mt-4 h-12 w-full flex items-end gap-1">
-              <div className="flex-1 bg-primary/20 rounded-t-sm h-12"></div>
-              <div className="flex-1 bg-primary/20 rounded-t-sm h-11"></div>
-              <div className="flex-1 bg-primary/40 rounded-t-sm h-10"></div>
-              <div className="flex-1 bg-primary/60 rounded-t-sm h-9"></div>
-              <div className="flex-1 bg-primary/80 rounded-t-sm h-8"></div>
-              <div className="flex-1 bg-primary rounded-t-sm h-7"></div>
-            </div>
           </div>
 
           {/* ROI */}
@@ -136,14 +112,6 @@ const Analytics = () => {
             </div>
             <p className="text-label-caps text-on-surface-variant mb-1">Vehicle ROI</p>
             <h3 className="text-headline-md font-bold text-on-surface">{kpis.roi}</h3>
-            <div className="mt-4 h-12 w-full flex items-end gap-1">
-              <div className="flex-1 bg-tertiary/20 rounded-t-sm h-4"></div>
-              <div className="flex-1 bg-tertiary/20 rounded-t-sm h-6"></div>
-              <div className="flex-1 bg-tertiary/40 rounded-t-sm h-8"></div>
-              <div className="flex-1 bg-tertiary/60 rounded-t-sm h-7"></div>
-              <div className="flex-1 bg-tertiary/80 rounded-t-sm h-10"></div>
-              <div className="flex-1 bg-tertiary rounded-t-sm h-12"></div>
-            </div>
           </div>
         </div>
 

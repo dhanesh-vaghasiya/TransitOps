@@ -55,6 +55,7 @@ const Login = () => {
               <span className="material-symbols-outlined text-[24px]">shield</span>
               <span>SAFETY COMPLIANCE</span>
             </div>
+
           </div>
         </div>
       </div>

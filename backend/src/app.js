@@ -46,6 +46,7 @@ app.use('/api/v1/maintenance', require('./modules/maintenance/routes'));
 app.use('/api/v1/fuel', require('./modules/fuel/routes'));
 app.use('/api/v1/fuel-logs', require('./modules/fuel/routes'));
 app.use('/api/v1/expenses', require('./modules/expense/routes'));
+app.use('/api/v1/settings', require('./modules/settings/routes'));
 app.use('/api/v1/reports', require('./modules/report/routes'));
 
 // Error middleware should be mounted last

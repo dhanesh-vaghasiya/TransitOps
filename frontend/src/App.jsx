@@ -11,6 +11,7 @@ import Drivers from './pages/Drivers';
 import Maintenance from './pages/Maintenance';
 
 import Dashboard from './pages/Dashboard/Dashboard';
+import SettingsPage from './pages/Settings/SettingsPage';
 import Analytics from './pages/Analytics/Analytics';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="fleet" element={<VehicleList />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="maintenance" element={<Maintenance />} />
+          <Route path="settings" element={<ProtectedRoute allowedRoles={['fleet_manager']}><SettingsPage /></ProtectedRoute>} />
         </Route>
       </Routes>
       </BrowserRouter>
