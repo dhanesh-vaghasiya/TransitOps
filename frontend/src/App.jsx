@@ -13,7 +13,8 @@ const Home = () => <div className="p-4 text-white">Dashboard (Phase 9)</div>;
 
 function App() {
   return (
-    <BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
@@ -23,7 +24,8 @@ function App() {
           <Route path="fleet" element={<VehicleList />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
