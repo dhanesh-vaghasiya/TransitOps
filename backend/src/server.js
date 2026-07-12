@@ -13,6 +13,7 @@ const io = new Server(server, {
     methods: ['GET', 'POST'],
   },
 });
+app.set('io', io);
 
 io.on('connection', (socket) => {
   logger.info(`Socket connected: ${socket.id}`);

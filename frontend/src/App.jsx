@@ -5,6 +5,7 @@ import Layout from './components/layout/Layout';
 import { AuthProvider } from './contexts/AuthContext';
 import Login from './pages/Login';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import Drivers from './pages/Drivers';
 
 const Home = () => <div className="p-4">Dashboard (Phase 9)</div>;
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route index element={<Home />} />
+            <Route path="drivers" element={<Drivers />} />
           </Route>
         </Routes>
       </BrowserRouter>
