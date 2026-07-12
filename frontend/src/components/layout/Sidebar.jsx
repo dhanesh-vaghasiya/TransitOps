@@ -1,7 +1,8 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAccessLevel } from '../../utils/rbac';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: 'dashboard', id: 'nav-dashboard', resourceKey: 'dashboard' },
@@ -14,7 +15,18 @@ const navItems = [
 ];
 
 const Sidebar = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
+
+  const getInitials = (name) => {
+    return name ? name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase() : 'U';
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 flex flex-col z-20 py-6 pl-6 pr-2 bg-transparent pointer-events-none">
@@ -46,6 +58,36 @@ const Sidebar = () => {
           );
         })}
       </nav>
+
+      <div className="pointer-events-auto mt-6 border-t border-outline-variant/30 pt-4 flex flex-col gap-3 pr-2">
+        <div className="flex items-center justify-around">
+          <button 
+            onClick={toggleTheme}
+            className="flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-xl hover:bg-surface-container/30 w-full"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+          >
+            <span className="material-symbols-outlined">
+              {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+            </span>
+          </button>
+          <button className="relative flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-xl hover:bg-surface-container/30 w-full">
+            <span className="material-symbols-outlined">notifications</span>
+            <span className="absolute top-2 right-1/4 translate-x-2 w-2 h-2 bg-error border border-surface rounded-full shimmer-glow"></span>
+          </button>
+        </div>
+        
+        <div 
+          className="bg-surface-container/40 backdrop-blur-md border border-white/5 text-primary pl-2 pr-4 py-2 rounded-xl text-body-sm font-medium flex items-center gap-3 cursor-pointer hover:bg-surface-container/60 hover:pr-8 transition-all duration-300 shadow-sm group relative w-full overflow-hidden"
+          onClick={handleLogout}
+          title="Logout"
+        >
+          <div className="w-8 h-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center font-bold text-[12px] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)] shrink-0 z-10">
+            {getInitials(user?.fullName)}
+          </div>
+          <span className="truncate z-10 flex-1">{user?.fullName || 'User'}</span>
+          <span className="material-symbols-outlined text-[18px] opacity-0 group-hover:opacity-100 transition-all duration-300 absolute right-3 translate-x-4 group-hover:translate-x-0 text-error">logout</span>
+        </div>
+      </div>
     </aside>
   );
 };

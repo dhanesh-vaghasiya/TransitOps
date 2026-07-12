@@ -359,7 +359,7 @@ const FuelExpensePage = () => {
 
         {/* Right Column: Efficiency Index (1/3 width) */}
         <div className="col-span-1">
-          <GlassPanel className="p-5 h-full flex flex-col justify-between border-primary/20 bg-linear-to-b from-primary/5 to-transparent">
+          <GlassPanel className="p-5 h-full flex flex-col justify-start space-y-8 border-primary/20 bg-linear-to-b from-primary/5 to-transparent">
             <div>
               <div className="flex items-center justify-between mb-4 border-b border-outline-variant/30 pb-3">
                 <div className="flex items-center gap-2">
@@ -368,8 +368,8 @@ const FuelExpensePage = () => {
                 </div>
               </div>
               
-              <div className="py-6 text-center">
-                <span className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Fleet Odo Efficiency</span>
+              <div className="py-6 text-center flex flex-col items-center">
+                <span className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">Fleet Odo Efficiency</span>
                 <div className="text-[52px] font-outfit font-bold text-primary tracking-tight my-1 select-none active-glow rounded-xl py-2 bg-surface-bright/20 border border-outline-variant/20 inline-block px-6">
                   {averageEfficiency} <span className="text-title-sm font-normal text-on-surface-variant font-inter">km/L</span>
                 </div>

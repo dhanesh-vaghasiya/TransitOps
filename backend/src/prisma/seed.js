@@ -164,9 +164,38 @@ async function seedOperations(vehicles, drivers) {
       fuelConsumed: (distance / (4 + Math.random() * 4)).toFixed(2), // varied fuel efficiency
       status: 'completed',
       startedAt: started,
-      completedAt: completed
+      completedAt: completed,
+      createdAt: started
     };
     await prisma.trip.upsert({ where: { tripNumber: histTrip.tripNumber }, update: histTrip, create: histTrip });
+  }
+
+  // Add recent trips scattered across the last 24 hours for the Trip Volume Trend chart
+  for (let i = 1; i <= 30; i++) {
+    const hoursAgo = Math.random() * 24;
+    const createdAt = new Date(Date.now() - (hoursAgo * 3600000));
+    const startedAt = createdAt;
+    const isCompleted = Math.random() > 0.4;
+    
+    const recentTrip = {
+      tripNumber: `TR-REC-${i}`,
+      vehicleId: getV(i % 3 === 0 ? 'VAN-05' : (i % 2 === 0 ? 'TRUCK-11' : 'CAR-07')),
+      driverId: getD(i % 3 === 0 ? 'Alex Johnson' : (i % 2 === 0 ? 'Priya Patel' : 'John Doe')),
+      source: `Local Hub ${i}`,
+      destination: `Client Site ${i}`,
+      cargoWeight: (200 + Math.floor(Math.random() * 800)).toString(),
+      plannedDistance: (10 + Math.floor(Math.random() * 90)).toString(),
+      status: isCompleted ? 'completed' : (Math.random() > 0.5 ? 'dispatched' : 'draft'),
+      startedAt: startedAt,
+      completedAt: isCompleted ? new Date(startedAt.getTime() + 3600000 * (1 + Math.random())) : null,
+      createdAt: createdAt
+    };
+    if (recentTrip.status === 'completed') {
+      recentTrip.actualDistance = (parseFloat(recentTrip.plannedDistance) + Math.random() * 5).toFixed(2);
+      recentTrip.fuelConsumed = (parseFloat(recentTrip.actualDistance) / 10).toFixed(2);
+    }
+    
+    await prisma.trip.upsert({ where: { tripNumber: recentTrip.tripNumber }, update: recentTrip, create: recentTrip });
   }
 
   const tr1 = await prisma.trip.findUnique({ where: { tripNumber: 'TR-2026-001' }});
