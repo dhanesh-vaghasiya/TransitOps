@@ -27,8 +27,8 @@ const DataTable = ({ columns, data, onAction, onRowClick }) => {
               </tr>
             ) : (
               data.map((row, rowIdx) => (
-                <tr 
-                  key={rowIdx} 
+                <tr
+                  key={rowIdx}
                   onClick={() => onRowClick && onRowClick(row)}
                   className={`hover:bg-surface-container-high/30 transition-colors group ${onRowClick ? 'cursor-pointer' : ''}`}
                 >
@@ -39,7 +39,7 @@ const DataTable = ({ columns, data, onAction, onRowClick }) => {
                   ))}
                   {onAction && (
                     <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
-                      <button 
+                      <button
                         onClick={() => onAction(row)}
                         className="text-on-surface-variant hover:text-primary p-1 rounded-md hover:bg-surface-container-high transition-colors opacity-0 group-hover:opacity-100"
                       >
