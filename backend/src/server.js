@@ -14,6 +14,7 @@ const io = new Server(server, {
     methods: ['GET', 'POST'],
   },
 });
+app.set('io', io);
 
 // Register io singleton so services can emit events
 socketConfig.setIo(io);

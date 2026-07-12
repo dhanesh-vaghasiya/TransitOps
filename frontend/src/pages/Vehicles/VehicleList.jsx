@@ -83,12 +83,12 @@ const VehicleList = () => {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-white">Vehicle Registry</h1>
-          <p className="text-sm text-zinc-400 mt-1">Manage your fleet, track operational status and costs.</p>
+          <h1 className="text-display-lg-mobile font-bold text-on-background font-outfit">Vehicle Registry</h1>
+          <p className="text-body-md text-on-surface-variant mt-1">Manage your fleet, track operational status and costs.</p>
         </div>
         <button 
           onClick={handleAddClick}
-          className="bg-brand-orange hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-lg shadow-orange-500/20"
+          className="bg-primary hover:bg-primary-container text-on-primary hover:text-on-primary-container px-4 py-2 rounded-lg font-medium transition-colors shadow-lg active-glow"
         >
           + Add Vehicle
         </button>
@@ -98,7 +98,7 @@ const VehicleList = () => {
         <BentoStatCard title="Active Units" value={activeUnits} colorClass="border-emerald-500" icon={CheckCircle2} />
         <BentoStatCard title="On Trip" value={onTrip} colorClass="border-blue-500" icon={Truck} />
         <BentoStatCard title="In Maintenance" value={inShop} colorClass="border-amber-500" icon={Wrench} />
-        <BentoStatCard title="Avg Cost / Km" value={`₹${avgCostPerKm}`} colorClass="border-purple-500" icon={IndianRupee} />
+        <BentoStatCard title="Avg Cost / Km" value={`₹${avgCostPerKm}`} colorClass="border-primary" icon={IndianRupee} />
       </div>
 
       <FilterBar 
@@ -109,13 +109,13 @@ const VehicleList = () => {
       />
 
       {loading ? (
-        <div className="text-center py-10 text-zinc-500 animate-pulse">Loading vehicles...</div>
+        <div className="text-center py-10 text-on-surface-variant animate-pulse">Loading vehicles...</div>
       ) : (
         <DataTable columns={columns} data={vehicles} onAction={handleEditClick} />
       )}
 
-      <div className="mt-4 text-xs text-rose-400/80 bg-rose-500/10 p-3 rounded-lg border border-rose-500/20">
-        <span className="font-semibold text-rose-400">Rule:</span> Registration No. must be unique. Retired/In Shop vehicles are hidden from Trip Dispatcher.
+      <div className="mt-4 text-body-sm text-on-error-container bg-error-container p-3 rounded-lg border border-error">
+        <span className="font-semibold text-error">Rule:</span> Registration No. must be unique. Retired/In Shop vehicles are hidden from Trip Dispatcher.
       </div>
 
       <Modal 

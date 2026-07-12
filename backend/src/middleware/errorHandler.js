@@ -3,7 +3,10 @@ const logger = require('../config/logger');
 const errorHandler = (err, req, res, next) => {
   let { statusCode, message } = err;
   
-  if (!err.isOperational) {
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    statusCode = 400;
+    message = 'Invalid JSON Payload';
+  } else if (!err.isOperational) {
     statusCode = 500;
     message = 'Internal Server Error';
     logger.error(err);

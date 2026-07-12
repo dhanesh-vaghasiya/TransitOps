@@ -2,8 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-const SAMPLE_PASSWORD_HASH =
-  '$2b$10$TransitOpsSeedPasswordHashForLocalDevelopmentOnly';
+
 
 async function seedRoles() {
   const roles = [
@@ -28,17 +27,20 @@ async function seedUsers(roles) {
   const roleByName = Object.fromEntries(roles.map((role) => [role.name, role]));
   const users = [
     {
-      email: 'manager@transitops.local',
+      email: 'manager@gmail.com',
+      passwordHash: '$2b$10$1btSK8T2pB5AEKO3mFkEQ.1ik/Ayai0jkBxYJs5JQz/fLCAvz8lrO', // manager123
       fullName: 'Fleet Manager',
       roles: ['fleet_manager', 'financial_analyst'],
     },
     {
-      email: 'safety@transitops.local',
+      email: 'safety@gmail.com',
+      passwordHash: '$2b$10$ybGPdIFc81VHm2FBAQVC5OwTQXv401.NU4A5FUB06BS.eCzNOQ5X2', // safety123
       fullName: 'Safety Officer',
       roles: ['safety_officer'],
     },
     {
-      email: 'driver@transitops.local',
+      email: 'driver@gmail.com',
+      passwordHash: '$2b$10$e0aewc4VF.Mvgn9W0oSnRe39Zg96OUmcyuXhE53wvh8AcuMJEv3z6', // driver123
       fullName: 'Demo Driver',
       roles: ['driver'],
     },
@@ -53,7 +55,7 @@ async function seedUsers(roles) {
       },
       create: {
         email: user.email,
-        passwordHash: SAMPLE_PASSWORD_HASH,
+        passwordHash: user.passwordHash,
         fullName: user.fullName,
         status: 'active',
       },
