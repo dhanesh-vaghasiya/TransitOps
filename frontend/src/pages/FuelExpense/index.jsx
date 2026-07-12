@@ -73,7 +73,7 @@ const FuelExpensePage = () => {
   const loadDropdowns = useCallback(async () => {
     try {
       const [vRes, tRes] = await Promise.all([getVehicles(), getTrips({ limit: 100 })]);
-      setVehicles(vRes.data?.data?.vehicles ?? []);
+      setVehicles(vRes.data?.data ?? []);
       setTrips(tRes.data?.data?.trips ?? []);
     } catch (err) {
       console.error('Failed to load dropdown data', err);
