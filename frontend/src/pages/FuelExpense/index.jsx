@@ -359,7 +359,7 @@ const FuelExpensePage = () => {
 
         {/* Right Column: Efficiency Index (1/3 width) */}
         <div className="col-span-1">
-          <GlassPanel className="p-5 h-full flex flex-col justify-start space-y-8 border-primary/20 bg-linear-to-b from-primary/5 to-transparent">
+          <GlassPanel className="p-5 h-fit flex flex-col justify-start space-y-8 border-primary/20 bg-linear-to-b from-primary/5 to-transparent">
             <div>
               <div className="flex items-center justify-between mb-4 border-b border-outline-variant/30 pb-3">
                 <div className="flex items-center gap-2">
