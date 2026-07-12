@@ -84,7 +84,7 @@ const DriverList = () => {
         const expired = isLicenseExpired(row.licenseExpiry);
         return (
           <div>
-            <div className="font-mono text-gray-200">{row.licenseNumber} <span className="text-xs text-gray-400">({row.licenseCategory})</span></div>
+            <div className="font-mono text-gray-200">{row.licenseNumber} <span className="text-xs text-gray-400">({row.licenseCategory ? row.licenseCategory.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : ''})</span></div>
             <div className={`text-xs ${expired ? 'text-red-400 font-medium' : 'text-gray-400'}`}>
               Expires: {new Date(row.licenseExpiry).toLocaleDateString()}
               {expired && ' (EXPIRED)'}

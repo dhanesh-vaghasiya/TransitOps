@@ -5,7 +5,7 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
   const [formData, setFormData] = useState({
     name: '',
     licenseNumber: '',
-    licenseCategory: 'C',
+    licenseCategory: 'van',
     licenseExpiry: '',
     contactNumber: '',
     safetyScore: 100,
@@ -19,7 +19,7 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
       setFormData({
         name: driver.name || '',
         licenseNumber: driver.licenseNumber || '',
-        licenseCategory: driver.licenseCategory || 'C',
+        licenseCategory: driver.licenseCategory || 'van',
         licenseExpiry: driver.licenseExpiry ? new Date(driver.licenseExpiry).toISOString().split('T')[0] : '',
         contactNumber: driver.contactNumber || '',
         safetyScore: driver.safetyScore || 100,
@@ -107,8 +107,15 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white"
               >
-                {['A', 'B', 'C', 'D', 'E', 'F'].map(cat => (
-                  <option key={cat} value={cat} className="bg-surface text-white">{cat}</option>
+                {[
+                  { value: 'van', label: 'Van' },
+                  { value: 'truck', label: 'Truck' },
+                  { value: 'lorry', label: 'Lorry' },
+                  { value: 'bike', label: 'Bike' },
+                  { value: 'car', label: 'Car' },
+                  { value: 'bus', label: 'Bus' }
+                ].map(cat => (
+                  <option key={cat.value} value={cat.value} className="bg-surface text-white">{cat.label}</option>
                 ))}
               </select>
             </div>
@@ -121,6 +128,7 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
                 type="date"
                 name="licenseExpiry"
                 required
+                max="2100-12-31"
                 value={formData.licenseExpiry}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white"
