@@ -8,6 +8,7 @@ import FuelExpensePage from './pages/FuelExpense/index';
 import Login from './pages/Login';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Drivers from './pages/Drivers';
+import Maintenance from './pages/Maintenance';
 import { AuthProvider } from './contexts/AuthContext';
 
 const Home = () => <div className="p-4 text-white">Dashboard (Phase 9)</div>;
@@ -24,6 +25,7 @@ function App() {
           <Route path="fuel" element={<FuelExpensePage />} />
           <Route path="drivers" element={<Drivers />} />
           <Route path="fleet" element={<VehicleList />} />
+          <Route path="maintenance" element={<Maintenance />} />
         </Route>
       </Routes>
       </BrowserRouter>

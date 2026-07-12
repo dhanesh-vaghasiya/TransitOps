@@ -86,19 +86,50 @@ const TripForm = ({ onCreated }) => {
     load();
   }, []);
 
-  const selectedVehicle = pool.vehicles.find((v) => v.id === parseInt(form.vehicleId, 10));
+  const cargo = parseFloat(form.cargoWeight);
+  const dist = parseFloat(form.plannedDistance);
+  const isBaseInfoFilled = form.source.trim() !== '' && form.destination.trim() !== '' && !isNaN(cargo) && !isNaN(dist);
 
-  // Real-time capacity check
+  const eligibleVehicles = pool.vehicles.filter((v) => {
+    if (!isNaN(cargo) && parseFloat(v.maxLoadCapacity) < cargo) return false;
+    return true;
+  });
+
+  const selectedVehicle = eligibleVehicles.find((v) => v.id === parseInt(form.vehicleId, 10));
+
+  const eligibleDrivers = pool.drivers.filter((d) => {
+    // Distance rule: Trips over 300km require a safety score of >= 90
+    if (!isNaN(dist) && dist > 300 && parseFloat(d.safetyScore) < 90) return false;
+
+    // License category rule matches vehicle type exactly
+    if (selectedVehicle && d.licenseCategory !== selectedVehicle.type) return false;
+    
+    return true;
+  });
+
+  // Check if currently selected vehicle/driver became ineligible due to changes
+  useEffect(() => {
+    if (form.vehicleId && !eligibleVehicles.find(v => v.id === parseInt(form.vehicleId, 10))) {
+      setForm(prev => ({ ...prev, vehicleId: '' }));
+    }
+  }, [form.cargoWeight, eligibleVehicles, form.vehicleId]);
+
+  useEffect(() => {
+    if (form.driverId && !eligibleDrivers.find(d => d.id === parseInt(form.driverId, 10))) {
+      setForm(prev => ({ ...prev, driverId: '' }));
+    }
+  }, [form.plannedDistance, form.vehicleId, eligibleDrivers, form.driverId]);
+
+  // Real-time capacity check (mostly handled by filter, but kept for UI feedback if needed)
   useEffect(() => {
     if (!selectedVehicle || !form.cargoWeight) {
       setCapacityError(null);
       return;
     }
-    const cargo = parseFloat(form.cargoWeight);
-    const max = parseFloat(selectedVehicle.maxLoadCapacity);
-    if (!isNaN(cargo) && !isNaN(max) && cargo > max) {
-      const excess = (cargo - max).toFixed(0);
-      setCapacityError(`Capacity exceeded by ${excess} kg — dispatch blocked`);
+    const c = parseFloat(form.cargoWeight);
+    const m = parseFloat(selectedVehicle.maxLoadCapacity);
+    if (!isNaN(c) && !isNaN(m) && c > m) {
+      setCapacityError(`Capacity exceeded by ${(c - m).toFixed(0)} kg — dispatch blocked`);
     } else {
       setCapacityError(null);
     }
@@ -204,54 +235,6 @@ const TripForm = ({ onCreated }) => {
           </div>
         </div>
 
-        {/* Vehicle */}
-        <div>
-          <label htmlFor="vehicleId" className={labelClass}>Vehicle</label>
-          <select
-            id="vehicleId"
-            name="vehicleId"
-            value={form.vehicleId}
-            onChange={handleChange}
-            disabled={!!draftTrip || poolLoading}
-            required
-            className={inputClass}
-            data-element-id="trip-vehicle-select"
-          >
-            <option value="">
-              {poolLoading ? 'Loading vehicles…' : 'Select vehicle'}
-            </option>
-            {pool.vehicles.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name} — {v.registrationNumber} (max {v.maxLoadCapacity} kg)
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Driver */}
-        <div>
-          <label htmlFor="driverId" className={labelClass}>Driver</label>
-          <select
-            id="driverId"
-            name="driverId"
-            value={form.driverId}
-            onChange={handleChange}
-            disabled={!!draftTrip || poolLoading}
-            required
-            className={inputClass}
-            data-element-id="trip-driver-select"
-          >
-            <option value="">
-              {poolLoading ? 'Loading drivers…' : 'Select driver'}
-            </option>
-            {pool.drivers.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name} — {d.licenseCategory} Lic.
-              </option>
-            ))}
-          </select>
-        </div>
-
         {/* Cargo & Distance */}
         <div className="grid grid-cols-2 gap-3">
           <div>
@@ -288,6 +271,54 @@ const TripForm = ({ onCreated }) => {
               data-element-id="trip-planned-distance"
             />
           </div>
+        </div>
+
+        {/* Vehicle */}
+        <div>
+          <label htmlFor="vehicleId" className={labelClass}>Vehicle</label>
+          <select
+            id="vehicleId"
+            name="vehicleId"
+            value={form.vehicleId}
+            onChange={handleChange}
+            disabled={!!draftTrip || poolLoading || !isBaseInfoFilled}
+            required
+            className={inputClass}
+            data-element-id="trip-vehicle-select"
+          >
+            <option value="">
+              {!isBaseInfoFilled ? 'Enter cargo & distance first' : poolLoading ? 'Loading vehicles…' : 'Select eligible vehicle'}
+            </option>
+            {eligibleVehicles.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.name} — {v.registrationNumber} (max {v.maxLoadCapacity} kg)
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Driver */}
+        <div>
+          <label htmlFor="driverId" className={labelClass}>Driver</label>
+          <select
+            id="driverId"
+            name="driverId"
+            value={form.driverId}
+            onChange={handleChange}
+            disabled={!!draftTrip || poolLoading || !form.vehicleId}
+            required
+            className={inputClass}
+            data-element-id="trip-driver-select"
+          >
+            <option value="">
+              {!form.vehicleId ? 'Select a vehicle first' : poolLoading ? 'Loading drivers…' : 'Select eligible driver'}
+            </option>
+            {eligibleDrivers.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.name} — {d.licenseCategory ? d.licenseCategory.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : ''} Lic. (Score: {d.safetyScore})
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Capacity error block */}

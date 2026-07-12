@@ -44,12 +44,12 @@ enum DriverStatus {
 }
 
 enum LicenseCategory {
-  A
-  B
-  C
-  D
-  E
-  F
+  van
+  truck
+  lorry
+  bike
+  car
+  bus
 
   @@map("license_category")
 }
