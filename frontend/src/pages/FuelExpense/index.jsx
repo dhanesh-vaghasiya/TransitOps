@@ -11,6 +11,7 @@ import { getTrips } from '../../services/tripService';
 import { useSettings } from '../../contexts/SettingsContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { hasMutationAccess } from '../../utils/rbac';
+import Select from '../../components/ui/Select';
 
 const FuelExpensePage = () => {
   const { formatCurrency, formatDistance, settings } = useSettings();
@@ -80,7 +81,7 @@ const FuelExpensePage = () => {
   const loadDropdowns = useCallback(async () => {
     try {
       const [vRes, tRes] = await Promise.all([getVehicles(), getTrips({ limit: 100 })]);
-      setVehicles(vRes.data?.data?.vehicles ?? []);
+      setVehicles(vRes.data?.data ?? []);
       setTrips(tRes.data?.data?.trips ?? []);
     } catch (err) {
       console.error('Failed to load dropdown data', err);
@@ -370,7 +371,7 @@ const FuelExpensePage = () => {
 
         {/* Right Column: Efficiency Index (1/3 width) */}
         <div className="col-span-1">
-          <GlassPanel className="p-5 h-full flex flex-col justify-between border-primary/20 bg-gradient-to-b from-primary/5 to-transparent">
+          <GlassPanel className="p-5 h-full flex flex-col justify-between border-primary/20 bg-linear-to-b from-primary/5 to-transparent">
             <div>
               <div className="flex items-center justify-between mb-4 border-b border-outline-variant/30 pb-3">
                 <div className="flex items-center gap-2">
@@ -451,7 +452,7 @@ const FuelExpensePage = () => {
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-surface-container-high border border-primary/30 flex items-center gap-4 glow-orange bg-gradient-to-r from-primary/10 to-transparent">
+        <div className="p-4 rounded-xl bg-surface-container-high border border-primary/30 flex items-center gap-4 glow-orange bg-linear-to-r from-primary/10 to-transparent">
           <div className="w-10 h-10 rounded-lg bg-primary text-on-primary flex items-center justify-center">
             <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
           </div>
@@ -472,12 +473,12 @@ const FuelExpensePage = () => {
         <form onSubmit={handleFuelSubmit} className="space-y-4" id="fuel-form">
           <div>
             <label htmlFor="fuel-vehicleId" className={labelClass}>Vehicle</label>
-            <select
+            <Select
               id="fuel-vehicleId"
               value={fuelForm.vehicleId}
               onChange={(e) => setFuelForm({ ...fuelForm, vehicleId: e.target.value, tripId: '' })}
               required
-              className={inputClass}
+              className="w-full"
             >
               <option value="">Select Vehicle</option>
               {vehicles.map((v) => (
@@ -485,16 +486,16 @@ const FuelExpensePage = () => {
                   {v.name} ({v.registrationNumber}) — Odo: {formatDistance(v.odometer)}
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>
             <label htmlFor="fuel-tripId" className={labelClass}>Linked Trip (Optional)</label>
-            <select
+            <Select
               id="fuel-tripId"
               value={fuelForm.tripId}
               onChange={(e) => setFuelForm({ ...fuelForm, tripId: e.target.value })}
-              className={inputClass}
+              className="w-full"
               disabled={!fuelForm.vehicleId}
             >
               <option value="">No Linked Trip / Independent</option>
@@ -503,7 +504,7 @@ const FuelExpensePage = () => {
                   {t.tripNumber} ({t.source} → {t.destination}) [{t.status}]
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -611,29 +612,29 @@ const FuelExpensePage = () => {
         <form onSubmit={handleExpenseSubmit} className="space-y-4" id="expense-form">
           <div>
             <label htmlFor="expense-category" className={labelClass}>Category</label>
-            <select
+            <Select
               id="expense-category"
               value={expenseForm.category}
               onChange={(e) => setExpenseForm({ ...expenseForm, category: e.target.value })}
               required
-              className={inputClass}
+              className="w-full"
             >
               <option value="toll">Toll Fees</option>
               <option value="parking">Parking</option>
               <option value="fine">Fines</option>
               <option value="insurance">Insurance</option>
               <option value="other">Misc / Other</option>
-            </select>
+            </Select>
           </div>
 
           <div>
             <label htmlFor="expense-vehicleId" className={labelClass}>Vehicle</label>
-            <select
+            <Select
               id="expense-vehicleId"
               value={expenseForm.vehicleId}
               onChange={(e) => setExpenseForm({ ...expenseForm, vehicleId: e.target.value, tripId: '' })}
               required
-              className={inputClass}
+              className="w-full"
             >
               <option value="">Select Vehicle</option>
               {vehicles.map((v) => (
@@ -641,16 +642,16 @@ const FuelExpensePage = () => {
                   {v.name} ({v.registrationNumber})
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>
             <label htmlFor="expense-tripId" className={labelClass}>Linked Trip (Optional)</label>
-            <select
+            <Select
               id="expense-tripId"
               value={expenseForm.tripId}
               onChange={(e) => setExpenseForm({ ...expenseForm, tripId: e.target.value })}
-              className={inputClass}
+              className="w-full"
               disabled={!expenseForm.vehicleId}
             >
               <option value="">No Linked Trip / Independent</option>
@@ -659,7 +660,7 @@ const FuelExpensePage = () => {
                   {t.tripNumber} ({t.source} → {t.destination}) [{t.status}]
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
 
           <div>
