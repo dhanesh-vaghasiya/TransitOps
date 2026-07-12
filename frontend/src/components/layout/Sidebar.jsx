@@ -11,6 +11,7 @@ const navItems = [
   { path: '/maintenance', label: 'Maintenance', icon: 'build', id: 'nav-maintenance', resourceKey: 'maintenance' },
   { path: '/fuel', label: 'Fuel & Expenses', icon: 'local_gas_station', id: 'nav-fuel', resourceKey: 'fuel' },
   { path: '/analytics', label: 'Analytics', icon: 'analytics', id: 'nav-analytics', resourceKey: 'analytics' },
+  { path: '/settings', label: 'Settings', icon: 'settings', id: 'nav-settings', resourceKey: 'settings' },
 ];
 
 const Sidebar = () => {

@@ -29,32 +29,33 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-surface">
-      {/* Brand Panel - 35% */}
-      <div className="hidden lg:flex w-[35%] bg-primary flex-col justify-center items-center p-12 relative overflow-hidden gap-16">
-        {/* Mesh grid background */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
-        
-        <div className="relative z-10 flex flex-col items-center text-center">
-          <div className="mb-8 p-6 bg-surface-container-highest/20 backdrop-blur rounded-3xl border border-white/10 shadow-xl inline-block">
-            <img src="/logo-dark.jpg" alt="TransitOps Logo" className="h-40 w-40 object-contain" />
+    <div className="flex min-h-screen w-full bg-transparent">
+      {/* Brand Panel - 40% */}
+      <div 
+        className="hidden lg:flex w-[40%] flex-col justify-center items-center p-12 relative overflow-hidden bg-[#9A5013] border-r border-white/5 shadow-2xl"
+        style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.2) 1.5px, transparent 1.5px)', backgroundSize: '24px 24px' }}
+      >
+        <div className="relative z-10 flex flex-col items-center text-center w-full max-w-sm">
+          <div className="bg-[#1C1A17] p-8 rounded-[2rem] shadow-2xl mb-8 border border-white/10">
+            <img src="/logo-dark.jpg" alt="TransitOps Logo" className="w-32 h-auto" />
           </div>
-          <h1 className="text-5xl font-bold text-white tracking-tight mb-3">TransitOps</h1>
-          <p className="text-primary-foreground/90 text-lg font-medium">Smart Transport Operations<br/>Platform</p>
-        </div>
+          <h1 className="text-4xl font-bold text-white tracking-tight mb-3">TransitOps</h1>
+          <p className="text-white/80 font-medium tracking-wide text-sm mb-16">Smart Transport Operations Platform</p>
+          
+          <div className="space-y-8 w-full pl-4 text-left">
+            <div className="flex items-center space-x-4 text-white font-bold text-sm tracking-wider">
+              <span className="material-symbols-outlined text-[24px]">analytics</span>
+              <span>REAL-TIME TELEMETRY</span>
+            </div>
+            <div className="flex items-center space-x-4 text-white font-bold text-sm tracking-wider">
+              <span className="material-symbols-outlined text-[24px]">route</span>
+              <span>DYNAMIC ROUTING</span>
+            </div>
+            <div className="flex items-center space-x-4 text-white font-bold text-sm tracking-wider">
+              <span className="material-symbols-outlined text-[24px]">shield</span>
+              <span>SAFETY COMPLIANCE</span>
+            </div>
 
-        <div className="relative z-10 space-y-5 w-full max-w-sm">
-          <div className="flex items-center space-x-4 text-white font-bold tracking-wide">
-            <span className="material-symbols-outlined text-white/80">monitoring</span>
-            <span className="uppercase text-sm">Real-time Telemetry</span>
-          </div>
-          <div className="flex items-center space-x-4 text-white font-bold tracking-wide">
-            <span className="material-symbols-outlined text-white/80">route</span>
-            <span className="uppercase text-sm">Dynamic Routing</span>
-          </div>
-          <div className="flex items-center space-x-4 text-white font-bold tracking-wide">
-            <span className="material-symbols-outlined text-white/80">security</span>
-            <span className="uppercase text-sm">Safety Compliance</span>
           </div>
         </div>
       </div>

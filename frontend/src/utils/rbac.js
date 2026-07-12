@@ -3,60 +3,58 @@ export const RBAC_MATRIX = {
     dashboard: 'full',
     fleet: 'full',
     drivers: 'full',
-    trips: 'full',
+    trips: 'none',
     maintenance: 'full',
-    fuel: 'full',
+    fuel: 'none',
     analytics: 'full',
     settings: 'full'
   },
   dispatcher: {
     dashboard: 'full',
     fleet: 'view',
-    drivers: 'view',
-    trips: 'full',
-    maintenance: 'view',
-    fuel: 'view',
-    analytics: 'view',
-    settings: 'none'
-  },
-  driver: {
-    dashboard: 'view',
-    fleet: 'none',
     drivers: 'none',
-    trips: 'view',
+    trips: 'full',
     maintenance: 'none',
-    fuel: 'full',
+    fuel: 'none',
     analytics: 'none',
     settings: 'none'
   },
   safety_officer: {
     dashboard: 'full',
-    fleet: 'view',
+    fleet: 'none',
     drivers: 'full',
     trips: 'view',
-    maintenance: 'view',
+    maintenance: 'none',
     fuel: 'none',
-    analytics: 'full',
+    analytics: 'none',
     settings: 'none'
   },
-  finance_manager: {
+  financial_analyst: {
     dashboard: 'full',
     fleet: 'view',
-    drivers: 'view',
-    trips: 'view',
-    maintenance: 'view',
+    drivers: 'none',
+    trips: 'none',
+    maintenance: 'none',
     fuel: 'full',
     analytics: 'full',
     settings: 'none'
   }
 };
 
+let liveRbacMatrix = null;
+
+export const setLiveRbacMatrix = (matrix) => {
+  liveRbacMatrix = matrix;
+};
+
 export const getAccessLevel = (userRoles, resource) => {
   if (!userRoles || !userRoles.length) return 'none';
   
+  const matrix = liveRbacMatrix || RBAC_MATRIX;
+  
   let accessLevel = 'none';
   for (const role of userRoles) {
-    const roleMatrix = RBAC_MATRIX[role];
+    const roleMatrix = matrix[role];
     if (roleMatrix) {
       const level = roleMatrix[resource];
       if (level === 'full') return 'full';

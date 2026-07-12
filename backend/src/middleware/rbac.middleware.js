@@ -15,10 +15,10 @@ const authorize = (...allowedRoles) => {
 };
 
 const fleetManagerOnly = authorize('fleet_manager');
-const driverAndAbove = authorize('driver', 'dispatcher', 'fleet_manager', 'safety_officer', 'finance_manager');
+const driverAndAbove = authorize('dispatcher', 'fleet_manager', 'safety_officer', 'financial_analyst');
 const safetyAndAbove = authorize('safety_officer', 'fleet_manager');
-const financeAndAbove = authorize('finance_manager', 'fleet_manager');
-const allRoles = authorize('driver', 'dispatcher', 'fleet_manager', 'safety_officer', 'finance_manager');
+const financeAndAbove = authorize('financial_analyst', 'fleet_manager');
+const allRoles = authorize('dispatcher', 'fleet_manager', 'safety_officer', 'financial_analyst');
 // Note: Depending on the specific roles required, expand these.
 
 module.exports = {

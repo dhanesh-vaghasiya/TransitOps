@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 async function seedRoles() {
   const roles = [
     ['fleet_manager', 'Oversees fleet assets, maintenance, and vehicle lifecycle'],
-    ['driver', 'Creates and executes trips with assigned vehicles'],
+    ['dispatcher', 'Creates and dispatches trips and manages active operations'],
     ['safety_officer', 'Tracks driver compliance and license validity'],
     ['financial_analyst', 'Reviews operational expenses and fleet costs'],
   ];
@@ -28,19 +28,25 @@ async function seedUsers(roles) {
       email: 'manager@gmail.com',
       passwordHash: '$2b$10$1btSK8T2pB5AEKO3mFkEQ.1ik/Ayai0jkBxYJs5JQz/fLCAvz8lrO', // manager123
       fullName: 'Fleet Manager',
-      roles: ['fleet_manager', 'financial_analyst'],
+      roles: ['fleet_manager'],
+    },
+    {
+      email: 'dispatcher@gmail.com',
+      passwordHash: '$2b$10$KKZxDYF8k7nGveKwpKBQluEX6sigmjqN0RIH3xM04EL5DClRdqCHq', // dispatcher123
+      fullName: 'Dispatcher User',
+      roles: ['dispatcher'],
     },
     {
       email: 'safety@gmail.com',
-      passwordHash: '$2b$10$ybGPdIFc81VHm2FBAQVC5OwTQXv401.NU4A5FUB06BS.eCzNOQ5X2', // safety123
+      passwordHash: '$2b$10$EVpnnDWHDpw6A7hXhxH0Leqc5kaAkR2LUFYO1qsG5QHrtGuGwxWOG', // safety123
       fullName: 'Safety Officer',
       roles: ['safety_officer'],
     },
     {
-      email: 'driver@gmail.com',
-      passwordHash: '$2b$10$e0aewc4VF.Mvgn9W0oSnRe39Zg96OUmcyuXhE53wvh8AcuMJEv3z6', // driver123
-      fullName: 'Demo Driver',
-      roles: ['driver'],
+      email: 'analyst@gmail.com',
+      passwordHash: '$2b$10$aTREiNskh6webdUS7HplPOpae1a0FtdQIf55xa5Daw5t73x8AS592', // analyst123
+      fullName: 'Financial Analyst',
+      roles: ['financial_analyst'],
     },
   ];
 
@@ -61,11 +67,69 @@ async function seedUsers(roles) {
   }
 }
 
+const defaultRbacMatrix = {
+  fleet_manager: {
+    dashboard: 'full',
+    fleet: 'full',
+    drivers: 'full',
+    trips: 'none',
+    maintenance: 'full',
+    fuel: 'none',
+    analytics: 'full',
+    settings: 'full'
+  },
+  dispatcher: {
+    dashboard: 'full',
+    fleet: 'view',
+    drivers: 'none',
+    trips: 'full',
+    maintenance: 'none',
+    fuel: 'none',
+    analytics: 'none',
+    settings: 'none'
+  },
+  safety_officer: {
+    dashboard: 'full',
+    fleet: 'none',
+    drivers: 'full',
+    trips: 'view',
+    maintenance: 'none',
+    fuel: 'none',
+    analytics: 'none',
+    settings: 'none'
+  },
+  financial_analyst: {
+    dashboard: 'full',
+    fleet: 'view',
+    drivers: 'none',
+    trips: 'none',
+    maintenance: 'none',
+    fuel: 'full',
+    analytics: 'full',
+    settings: 'none'
+  }
+};
+
 async function seedSettings() {
   await prisma.settings.create({
-    data: { depotName: 'Central Transit Depot', currency: 'USD', distanceUnit: 'km' },
+    data: {
+      depotName: 'Central Transit Depot',
+      currency: 'USD',
+      distanceUnit: 'km',
+      rbacMatrix: defaultRbacMatrix,
+    },
   });
 }
+
+async function seedSecurityLogs() {
+  await prisma.securityLog.createMany({
+    data: [
+      { action: 'ROLE_MODIFIED', details: 'Dispatcher RK modified "Dispatcher" role permissions' },
+      { action: 'SESSION_EXPIRED', details: 'System Auto-Lock triggered session expiry for Manager_Alex' },
+    ]
+  });
+}
+
 
 async function seedVehicles() {
   const vehicles = [
@@ -199,9 +263,29 @@ async function seedOperations(vehicles, drivers) {
 }
 
 async function main() {
+  // Clean up stale data from previous schema/role changes
   await prisma.settings.deleteMany({});
+  await prisma.securityLog.deleteMany({});
+
+  // Remove any roles that are no longer part of the 4-role system
+  const validRoleNames = ['fleet_manager', 'dispatcher', 'safety_officer', 'financial_analyst'];
+  const staleRoles = await prisma.role.findMany({ where: { name: { notIn: validRoleNames } } });
+  for (const r of staleRoles) {
+    await prisma.userRole.deleteMany({ where: { roleId: r.id } });
+    await prisma.role.delete({ where: { id: r.id } });
+  }
+
+  // Remove any users whose email is not in the seeded set
+  const validEmails = ['manager@gmail.com', 'dispatcher@gmail.com', 'safety@gmail.com', 'analyst@gmail.com'];
+  const staleUsers = await prisma.user.findMany({ where: { email: { notIn: validEmails } } });
+  for (const u of staleUsers) {
+    await prisma.userRole.deleteMany({ where: { userId: u.id } });
+    await prisma.user.delete({ where: { id: u.id } });
+  }
+
   await seedSettings();
-  
+  await seedSecurityLogs();
+
   const roles = await seedRoles();
   await seedUsers(roles);
   const vehicles = await seedVehicles();
