@@ -1,34 +1,35 @@
 import React from 'react';
 import { Search } from 'lucide-react';
+import Select from '../ui/Select';
 
 const FilterBar = ({ filters, setFilters, typeOptions, statusOptions, hideSearch = false }) => {
   return (
     <div className="flex flex-wrap items-center gap-4 glass-panel p-4 rounded-xl mb-6">
       
       {typeOptions && (
-        <select
+        <Select
           value={filters.type || ''}
           onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-          className="bg-surface-container-high text-on-surface text-body-md rounded-lg border border-outline focus:ring-primary focus:border-primary block p-2.5 outline-none"
+          className="w-40"
         >
           <option value="">Type: All</option>
           {typeOptions.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
-        </select>
+        </Select>
       )}
 
       {statusOptions && (
-        <select
+        <Select
           value={filters.status || ''}
           onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-          className="bg-surface-container-high text-on-surface text-body-md rounded-lg border border-outline focus:ring-primary focus:border-primary block p-2.5 outline-none"
+          className="w-40"
         >
           <option value="">Status: All</option>
           {statusOptions.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
-        </select>
+        </Select>
       )}
 
       {!hideSearch && (

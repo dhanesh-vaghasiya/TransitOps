@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import driverService from '../../services/driverService';
+import Select from '../../components/ui/Select';
 
 const DriverForm = ({ driver, onClose, onSuccess }) => {
   const [formData, setFormData] = useState({
@@ -101,11 +102,11 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">Category</label>
-              <select
+              <Select
                 name="licenseCategory"
                 value={formData.licenseCategory}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white"
+                className="w-full"
               >
                 {[
                   { value: 'van', label: 'Van' },
@@ -115,9 +116,9 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
                   { value: 'car', label: 'Car' },
                   { value: 'bus', label: 'Bus' }
                 ].map(cat => (
-                  <option key={cat.value} value={cat.value} className="bg-surface text-white">{cat.label}</option>
+                  <option key={cat.value} value={cat.value}>{cat.label}</option>
                 ))}
-              </select>
+              </Select>
             </div>
           </div>
           
@@ -149,17 +150,17 @@ const DriverForm = ({ driver, onClose, onSuccess }) => {
           {driver && (
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">Status</label>
-              <select
+              <Select
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-surface border border-white/10 rounded-lg focus:outline-none focus:border-primary text-white"
+                className="w-full"
               >
-                <option value="available" className="bg-surface text-white">Available</option>
-                <option value="on_trip" className="bg-surface text-white">On Trip</option>
-                <option value="off_duty" className="bg-surface text-white">Off Duty</option>
-                <option value="suspended" className="bg-surface text-white">Suspended</option>
-              </select>
+                <option value="available">Available</option>
+                <option value="on_trip">On Trip</option>
+                <option value="off_duty">Off Duty</option>
+                <option value="suspended">Suspended</option>
+              </Select>
             </div>
           )}
           
