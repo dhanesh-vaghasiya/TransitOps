@@ -2,20 +2,20 @@ import React from 'react';
 
 const BentoStatCard = ({ title, value, colorClass = 'border-primary', icon: Icon, trend }) => {
   return (
-    <div className={`relative glass-card p-5 border-l-4 ${colorClass} overflow-hidden transition-transform hover:-translate-y-1`}>
-      <div className="flex justify-between items-start z-10 relative">
-        <div>
-          <h3 className="text-on-surface-variant text-label-caps tracking-widest uppercase mb-1">{title}</h3>
-          <div className="text-display-lg-mobile font-bold text-on-background">{value}</div>
-        </div>
-        {trend && (
-          <div className={`text-xs px-2 py-1 rounded-full ${trend.startsWith('+') ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
-            {trend}
-          </div>
-        )}
+    <div className={`relative glass-card p-5 border-l-4 ${colorClass} overflow-hidden transition-transform hover:-translate-y-1 h-36 flex flex-col justify-between`}>
+      <div className="z-10 relative">
+        <h3 className="text-on-surface-variant text-label-caps tracking-widest uppercase mb-2">{title}</h3>
+        <div className="text-display-lg-mobile font-bold text-primary drop-shadow-[0_0_15px_rgba(255,152,0,0.5)]">{value}</div>
       </div>
+      
+      {trend && (
+        <div className={`z-10 relative text-body-sm font-medium ${trend.includes('+') ? 'text-emerald-400' : 'text-on-surface-variant'}`}>
+          {trend.includes('+') ? '↗ ' : (trend.includes('-') ? '— ' : '')}{trend}
+        </div>
+      )}
+
       {Icon && (
-        <Icon className="absolute -bottom-4 -right-4 w-24 h-24 text-primary opacity-10 z-0" />
+        <Icon className="absolute bottom-2 right-2 w-16 h-16 text-on-surface-variant opacity-10 z-0" />
       )}
     </div>
   );
