@@ -160,7 +160,7 @@ model Driver {
   licenseCategory LicenseCategory @map("license_category")
   licenseExpiry   DateTime        @map("license_expiry") @db.Date
   contactNumber   String?         @map("contact_number") @db.VarChar(20)
-  safetyScore     Decimal         @default(100.00) @map("safety_score") @db.Decimal(4, 2)
+  safetyScore     Decimal         @default(100.00) @map("safety_score") @db.Decimal(5, 2)
   status          DriverStatus    @default(available)
   createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt       DateTime        @updatedAt @map("updated_at") @db.Timestamp(6)
