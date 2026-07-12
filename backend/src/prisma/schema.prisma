@@ -256,3 +256,14 @@ model Expense {
   @@index([category], map: "idx_expenses_category")
   @@map("expenses")
 }
+
+model Settings {
+  id           Int      @id @default(autoincrement())
+  depotName    String   @map("depot_name") @db.VarChar(255)
+  currency     String   @db.VarChar(10)
+  distanceUnit String   @map("distance_unit") @db.VarChar(10)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@map("settings")
+}
