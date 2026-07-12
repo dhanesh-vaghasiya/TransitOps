@@ -77,36 +77,56 @@ async function seedUsers(roles) {
   }
 }
 
+async function seedSettings() {
+  await prisma.settings.create({
+    data: {
+      depotName: 'Central Transit Depot',
+      currency: 'USD',
+      distanceUnit: 'km',
+    },
+  });
+}
+
 async function seedVehicles() {
   const vehicles = [
     {
-      registrationNumber: 'GJ01TX1001',
-      name: 'Ahmedabad Cargo Van',
-      model: 'Tata Winger',
+      registrationNumber: 'VAN-05',
+      name: 'City Delivery Van',
+      model: 'Ford Transit',
       type: 'van',
-      maxLoadCapacity: '1200.00',
-      odometer: '18450.00',
-      acquisitionCost: '1450000.00',
+      maxLoadCapacity: '1500.00',
+      odometer: '45000.00',
+      acquisitionCost: '35000.00',
       status: 'available',
     },
     {
-      registrationNumber: 'GJ01TX2030',
-      name: 'Intercity Freight Truck',
-      model: 'Ashok Leyland Ecomet',
+      registrationNumber: 'TRUCK-11',
+      name: 'Heavy Freight Truck',
+      model: 'Volvo FH16',
       type: 'truck',
-      maxLoadCapacity: '7500.00',
-      odometer: '46200.00',
-      acquisitionCost: '2850000.00',
+      maxLoadCapacity: '18000.00',
+      odometer: '120500.00',
+      acquisitionCost: '120000.00',
       status: 'available',
     },
     {
-      registrationNumber: 'GJ18TX7788',
-      name: 'Express Delivery Bike',
-      model: 'TVS Raider',
-      type: 'bike',
-      maxLoadCapacity: '120.00',
-      odometer: '8200.00',
-      acquisitionCost: '112000.00',
+      registrationNumber: 'MINI-03',
+      name: 'Express Mini Truck',
+      model: 'Tata Ace',
+      type: 'lorry',
+      maxLoadCapacity: '800.00',
+      odometer: '15000.00',
+      acquisitionCost: '15000.00',
+      status: 'available',
+    },
+    {
+      registrationNumber: 'VAN-09',
+      name: 'Suburban Delivery Van',
+      model: 'Mercedes Sprinter',
+      type: 'van',
+      maxLoadCapacity: '1600.00',
+      odometer: '32000.00',
+      acquisitionCost: '42000.00',
       status: 'available',
     },
   ];
@@ -127,30 +147,39 @@ async function seedVehicles() {
 async function seedDrivers() {
   const drivers = [
     {
-      name: 'Arjun Patel',
-      licenseNumber: 'GJ-DRV-10001',
-      licenseCategory: 'D',
-      licenseExpiry: new Date('2028-04-30'),
-      contactNumber: '+919876543210',
-      safetyScore: '96.50',
-      status: 'available',
-    },
-    {
-      name: 'Meera Shah',
-      licenseNumber: 'GJ-DRV-10002',
+      name: 'Alex',
+      licenseNumber: 'LIC-ALEX-001',
       licenseCategory: 'C',
-      licenseExpiry: new Date('2027-11-15'),
-      contactNumber: '+919812345678',
-      safetyScore: '98.00',
+      licenseExpiry: new Date('2028-05-20'),
+      contactNumber: '555-0101',
+      safetyScore: '98.50',
       status: 'available',
     },
     {
-      name: 'Ravi Solanki',
-      licenseNumber: 'GJ-DRV-10003',
-      licenseCategory: 'A',
+      name: 'John',
+      licenseNumber: 'LIC-JOHN-002',
+      licenseCategory: 'E',
+      licenseExpiry: new Date('2027-11-15'),
+      contactNumber: '555-0102',
+      safetyScore: '95.00',
+      status: 'available',
+    },
+    {
+      name: 'Priya',
+      licenseNumber: 'LIC-PRIYA-003',
+      licenseCategory: 'B',
       licenseExpiry: new Date('2029-02-10'),
-      contactNumber: '+919899001122',
-      safetyScore: '93.25',
+      contactNumber: '555-0103',
+      safetyScore: '99.00',
+      status: 'available',
+    },
+    {
+      name: 'Suresh',
+      licenseNumber: 'LIC-SURESH-004',
+      licenseCategory: 'D',
+      licenseExpiry: new Date('2026-12-31'),
+      contactNumber: '555-0104',
+      safetyScore: '92.50',
       status: 'available',
     },
   ];
@@ -169,150 +198,193 @@ async function seedDrivers() {
 }
 
 async function seedOperations(vehicles, drivers) {
-  const van = vehicles.find((vehicle) => vehicle.registrationNumber === 'GJ01TX1001');
-  const truck = vehicles.find((vehicle) => vehicle.registrationNumber === 'GJ01TX2030');
-  const bike = vehicles.find((vehicle) => vehicle.registrationNumber === 'GJ18TX7788');
-  const arjun = drivers.find((driver) => driver.licenseNumber === 'GJ-DRV-10001');
-  const meera = drivers.find((driver) => driver.licenseNumber === 'GJ-DRV-10002');
+  const van05 = vehicles.find(v => v.registrationNumber === 'VAN-05');
+  const truck11 = vehicles.find(v => v.registrationNumber === 'TRUCK-11');
+  const mini03 = vehicles.find(v => v.registrationNumber === 'MINI-03');
+  const van09 = vehicles.find(v => v.registrationNumber === 'VAN-09');
 
-  const completedTrip = await prisma.trip.upsert({
-    where: { tripNumber: 'TRIP-2026-0001' },
-    update: {
-      vehicleId: van.id,
-      driverId: arjun.id,
-      source: 'Ahmedabad Warehouse',
-      destination: 'Vadodara Distribution Hub',
-      cargoWeight: '760.00',
-      plannedDistance: '112.00',
-      actualDistance: '118.40',
-      fuelConsumed: '15.80',
-      status: 'completed',
-      startedAt: new Date('2026-07-02T04:30:00.000Z'),
-      completedAt: new Date('2026-07-02T08:45:00.000Z'),
-    },
-    create: {
-      tripNumber: 'TRIP-2026-0001',
-      vehicleId: van.id,
-      driverId: arjun.id,
-      source: 'Ahmedabad Warehouse',
-      destination: 'Vadodara Distribution Hub',
-      cargoWeight: '760.00',
-      plannedDistance: '112.00',
-      actualDistance: '118.40',
-      fuelConsumed: '15.80',
-      status: 'completed',
-      startedAt: new Date('2026-07-02T04:30:00.000Z'),
-      completedAt: new Date('2026-07-02T08:45:00.000Z'),
-    },
-  });
+  const alex = drivers.find(d => d.name === 'Alex');
+  const john = drivers.find(d => d.name === 'John');
+  const priya = drivers.find(d => d.name === 'Priya');
+  const suresh = drivers.find(d => d.name === 'Suresh');
 
-  await prisma.trip.upsert({
-    where: { tripNumber: 'TRIP-2026-0002' },
-    update: {
-      vehicleId: truck.id,
-      driverId: meera.id,
-      source: 'Ahmedabad Yard',
-      destination: 'Surat Port',
-      cargoWeight: '5200.00',
-      plannedDistance: '265.00',
+  const tripsData = [
+    {
+      tripNumber: 'TR001',
+      vehicleId: van05.id,
+      driverId: alex.id,
+      source: 'Depot A',
+      destination: 'Client X',
+      cargoWeight: '500.00',
+      plannedDistance: '45.00',
+      actualDistance: '48.50',
+      fuelConsumed: '4.20',
+      status: 'completed',
+      startedAt: new Date('2026-07-10T08:00:00Z'),
+      completedAt: new Date('2026-07-10T10:30:00Z'),
+    },
+    {
+      tripNumber: 'TR002',
+      vehicleId: truck11.id,
+      driverId: john.id,
+      source: 'Depot B',
+      destination: 'Port Z',
+      cargoWeight: '15000.00',
+      plannedDistance: '350.00',
+      actualDistance: '355.00',
+      fuelConsumed: '85.00',
+      status: 'completed',
+      startedAt: new Date('2026-07-09T06:00:00Z'),
+      completedAt: new Date('2026-07-09T14:00:00Z'),
+    },
+    {
+      tripNumber: 'TR003',
+      vehicleId: mini03.id,
+      driverId: priya.id,
+      source: 'Depot A',
+      destination: 'Store Y',
+      cargoWeight: '300.00',
+      plannedDistance: '15.00',
+      status: 'dispatched',
+      startedAt: new Date(),
+    },
+    {
+      tripNumber: 'TR004',
+      vehicleId: van09.id,
+      driverId: suresh.id,
+      source: 'Depot C',
+      destination: 'Client W',
+      cargoWeight: '1200.00',
+      plannedDistance: '120.00',
       status: 'draft',
     },
-    create: {
-      tripNumber: 'TRIP-2026-0002',
-      vehicleId: truck.id,
-      driverId: meera.id,
-      source: 'Ahmedabad Yard',
-      destination: 'Surat Port',
-      cargoWeight: '5200.00',
-      plannedDistance: '265.00',
+    {
+      tripNumber: 'TR005',
+      vehicleId: truck11.id,
+      driverId: john.id,
+      source: 'Port Z',
+      destination: 'Depot A',
+      cargoWeight: '14500.00',
+      plannedDistance: '350.00',
       status: 'draft',
     },
-  });
-
-  await prisma.fuelLog.upsert({
-    where: { receiptNumber: 'FUEL-2026-0001' },
-    update: {
-      tripId: completedTrip.id,
-      vehicleId: van.id,
-      liters: '15.80',
-      costPerLiter: '96.25',
-      totalCost: '1520.75',
-      odometerReading: '18568.40',
-      loggedAt: new Date('2026-07-02T08:50:00.000Z'),
+    {
+      tripNumber: 'TR006',
+      vehicleId: van05.id,
+      driverId: alex.id,
+      source: 'Depot B',
+      destination: 'Client V',
+      cargoWeight: '400.00',
+      plannedDistance: '60.00',
+      status: 'draft',
     },
+  ];
+
+  for (const t of tripsData) {
+    await prisma.trip.upsert({
+      where: { tripNumber: t.tripNumber },
+      update: t,
+      create: t,
+    });
+  }
+
+  const tr001 = await prisma.trip.findUnique({ where: { tripNumber: 'TR001' }});
+  const tr002 = await prisma.trip.findUnique({ where: { tripNumber: 'TR002' }});
+
+  // Maintenance Logs
+  await prisma.maintenanceLog.upsert({
+    where: { workOrderNumber: 'WO-101' },
+    update: {},
     create: {
-      receiptNumber: 'FUEL-2026-0001',
-      tripId: completedTrip.id,
-      vehicleId: van.id,
-      liters: '15.80',
-      costPerLiter: '96.25',
-      totalCost: '1520.75',
-      odometerReading: '18568.40',
-      loggedAt: new Date('2026-07-02T08:50:00.000Z'),
+      workOrderNumber: 'WO-101',
+      vehicleId: van05.id,
+      maintenanceType: 'oil_change',
+      description: 'Routine oil change.',
+      cost: '120.00',
+      status: 'completed',
+      startedAt: new Date('2026-06-15T09:00:00Z'),
+      completedAt: new Date('2026-06-15T11:00:00Z'),
     },
   });
 
   await prisma.maintenanceLog.upsert({
-    where: { workOrderNumber: 'WO-2026-0001' },
-    update: {
-      vehicleId: truck.id,
-      maintenanceType: 'general_inspection',
-      description: 'Quarterly inspection before long-haul dispatch.',
-      cost: '3500.00',
-      status: 'scheduled',
-    },
+    where: { workOrderNumber: 'WO-102' },
+    update: {},
     create: {
-      workOrderNumber: 'WO-2026-0001',
-      vehicleId: truck.id,
-      maintenanceType: 'general_inspection',
-      description: 'Quarterly inspection before long-haul dispatch.',
-      cost: '3500.00',
+      workOrderNumber: 'WO-102',
+      vehicleId: truck11.id,
+      maintenanceType: 'brake_service',
+      description: 'Replace brake pads.',
+      cost: '450.00',
       status: 'scheduled',
     },
   });
 
-  await prisma.expense.upsert({
-    where: { expenseNumber: 'EXP-2026-0001' },
-    update: {
-      tripId: completedTrip.id,
-      vehicleId: van.id,
-      category: 'toll',
-      amount: '240.00',
-      description: 'Expressway toll for Ahmedabad to Vadodara trip.',
-      incurredAt: new Date('2026-07-02T06:10:00.000Z'),
-    },
+  // Fuel Logs
+  await prisma.fuelLog.upsert({
+    where: { receiptNumber: 'FL-201' },
+    update: {},
     create: {
-      expenseNumber: 'EXP-2026-0001',
-      tripId: completedTrip.id,
-      vehicleId: van.id,
-      category: 'toll',
-      amount: '240.00',
-      description: 'Expressway toll for Ahmedabad to Vadodara trip.',
-      incurredAt: new Date('2026-07-02T06:10:00.000Z'),
+      receiptNumber: 'FL-201',
+      tripId: tr001.id,
+      vehicleId: van05.id,
+      liters: '30.00',
+      costPerLiter: '1.50',
+      totalCost: '45.00',
+      odometerReading: '45048.50',
+      loggedAt: new Date('2026-07-10T10:45:00Z'),
+    },
+  });
+
+  await prisma.fuelLog.upsert({
+    where: { receiptNumber: 'FL-202' },
+    update: {},
+    create: {
+      receiptNumber: 'FL-202',
+      tripId: tr002.id,
+      vehicleId: truck11.id,
+      liters: '120.00',
+      costPerLiter: '1.45',
+      totalCost: '174.00',
+      odometerReading: '120855.00',
+      loggedAt: new Date('2026-07-09T14:15:00Z'),
+    },
+  });
+
+  // Expenses
+  await prisma.expense.upsert({
+    where: { expenseNumber: 'EX-301' },
+    update: {},
+    create: {
+      expenseNumber: 'EX-301',
+      tripId: tr001.id,
+      vehicleId: van05.id,
+      category: 'parking',
+      amount: '15.00',
+      description: 'Client X parking fee.',
+      incurredAt: new Date('2026-07-10T09:30:00Z'),
     },
   });
 
   await prisma.expense.upsert({
-    where: { expenseNumber: 'EXP-2026-0002' },
-    update: {
-      vehicleId: bike.id,
-      category: 'insurance',
-      amount: '4100.00',
-      description: 'Annual insurance renewal.',
-      incurredAt: new Date('2026-07-01T10:00:00.000Z'),
-    },
+    where: { expenseNumber: 'EX-302' },
+    update: {},
     create: {
-      expenseNumber: 'EXP-2026-0002',
-      vehicleId: bike.id,
-      category: 'insurance',
-      amount: '4100.00',
-      description: 'Annual insurance renewal.',
-      incurredAt: new Date('2026-07-01T10:00:00.000Z'),
+      expenseNumber: 'EX-302',
+      tripId: tr002.id,
+      vehicleId: truck11.id,
+      category: 'toll',
+      amount: '45.00',
+      description: 'Highway toll.',
+      incurredAt: new Date('2026-07-09T10:00:00Z'),
     },
   });
 }
 
 async function main() {
+  await prisma.settings.deleteMany({});
+  await seedSettings();
+  
   const roles = await seedRoles();
   await seedUsers(roles);
   const vehicles = await seedVehicles();
