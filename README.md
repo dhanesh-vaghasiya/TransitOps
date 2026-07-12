@@ -1,9 +1,9 @@
 <div align="center">
 
 # 🚚 TransitOps
-**Smart Transport Operations Platform**
+**Next-Generation Transport Operations & Fleet Management**
 
-An end-to-end operational control center for modern transport fleets, featuring real-time telemetry, dynamic routing, and safety compliance.
+TransitOps is an end-to-end operational control center designed for modern transport fleets. It provides real-time telemetry, dynamic dispatch, maintenance tracking, and actionable analytics to maximize fleet efficiency and safety.
 
 <p align="center">
   <img src="https://img.shields.io/badge/Status-Active-success.svg?style=for-the-badge" alt="Status" />
@@ -31,13 +31,12 @@ An end-to-end operational control center for modern transport fleets, featuring 
 
 ## ✨ Key Features
 
-- **📊 Centralized Dashboard:** Overview of KPIs, fleet utilization, operational costs, and ROI.
-- **📍 Real-Time Telemetry:** Live driver/vehicle locations and status powered by Socket.io.
-- **🛣️ Dynamic Routing & Trips:** Assign drivers, track trips from source to destination, and log trip histories.
-- **💰 Financial Operations:** Complete logging and tracking for vehicle fuel entries and operational expenses.
-- **🔧 Maintenance Workflow:** Track service logs, maintenance costs, and active workshop status to calculate fleet health.
-- **🔐 Secure RBAC:** Role-Based Access Control enforcing secure routing and API access for different staff levels.
-- **📄 Automated Reports:** Generate and download PDF analytics reports via PDFKit.
+- **📊 Central Command Dashboard:** Get a holistic view of your operations, including fleet health, active trips, and key performance indicators.
+- **📍 Live Telemetry & Tracking:** Monitor driver and vehicle statuses in real-time, powered by robust Socket.io connections.
+- **🛣️ Intelligent Dispatch & Routing:** Seamlessly assign drivers, coordinate complex trips, and log end-to-end historical data.
+- **🔧 Preventative Maintenance:** Streamline workshop workflows by tracking service logs, managing repairs, and avoiding unexpected breakdowns.
+- **🔐 Enterprise-Grade RBAC:** Ensure data security with strict Role-Based Access Control, tailored for drivers, managers, and admins.
+- **📄 Automated Analytics:** Generate actionable insights and PDF reports on-demand to continuously optimize your fleet performance.
 
 ---
 
@@ -46,7 +45,7 @@ An end-to-end operational control center for modern transport fleets, featuring 
 <table>
   <tr>
     <td width="50%" align="center">
-      <b>1. Secure Login & RBAC</b><br/>
+      <b>1. Secure Login & Access Control</b><br/>
       <img src="screenshots/01-login.png" alt="Login Page" width="100%">
     </td>
     <td width="50%" align="center">
@@ -56,107 +55,112 @@ An end-to-end operational control center for modern transport fleets, featuring 
   </tr>
   <tr>
     <td width="50%" align="center">
-      <b>3. Fleet Status</b><br/>
+      <b>3. Real-Time Fleet Status</b><br/>
       <img src="screenshots/03-fleet.png" alt="Fleet" width="100%">
     </td>
     <td width="50%" align="center">
-      <b>4. Driver Personnel</b><br/>
+      <b>4. Driver Personnel Management</b><br/>
       <img src="screenshots/04-drivers.png" alt="Drivers" width="100%">
     </td>
   </tr>
   <tr>
     <td width="50%" align="center">
-      <b>5. Active Trips & Dispatch</b><br/>
+      <b>5. Active Trips & Dispatching</b><br/>
       <img src="screenshots/05-trips.png" alt="Trips" width="100%">
     </td>
     <td width="50%" align="center">
-      <b>6. Workshop & Maintenance</b><br/>
+      <b>6. Workshop & Maintenance Operations</b><br/>
       <img src="screenshots/06-maintenance.png" alt="Maintenance" width="100%">
     </td>
   </tr>
   <tr>
-    <td width="50%" align="center">
-      <b>7. Financials & Fuel Log</b><br/>
-      <img src="screenshots/07-fuel.png" alt="Fuel" width="100%">
-    </td>
-    <td width="50%" align="center">
-      <b>8. Performance Analytics</b><br/>
-      <img src="screenshots/08-analytics.png" alt="Analytics" width="100%">
+    <td width="100%" colspan="2" align="center">
+      <b>7. Performance Analytics & Insights</b><br/>
+      <img src="screenshots/08-analytics.png" alt="Analytics" width="70%">
     </td>
   </tr>
 </table>
-
-
 
 ---
 
 ## 🚀 Getting Started
 
+Follow these steps to set up TransitOps locally for development and testing.
+
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [PostgreSQL](https://www.postgresql.org/) (v15 or higher)
+- [Node.js](https://nodejs.org/) (v18+)
+- [PostgreSQL](https://www.postgresql.org/) (v15+)
 
-### 1. Database Setup
+### 1. Database & Backend Setup
 
-First, install backend dependencies and set up your environment:
+First, navigate to the `backend` directory, install dependencies, and configure the environment:
 
 ```bash
 cd backend
 npm install
 cp .env.example .env
 ```
-*(On Windows PowerShell, use `Copy-Item .env.example .env`)*
+*(For Windows PowerShell, use `Copy-Item .env.example .env`)*
 
-Configure your `backend/.env` file with your database credentials:
+Update your `backend/.env` file with proper PostgreSQL credentials:
 ```env
-DATABASE_URL="postgresql://your_user:your_password@localhost:5432/transitops"
+DATABASE_URL="postgresql://user:password@localhost:5432/transitops"
 PORT=5000
 NODE_ENV=development
-JWT_SECRET="your_secret_key"
+JWT_SECRET="your_super_secret_key"
 ```
 
-Apply migrations and seed the database with initial demo data:
+Initialize the database schema and populate it with sample data:
 ```bash
 npm run db:deploy
 npm run db:seed
 ```
 
-### 2. Start the Backend
+### 2. Run the API Server
 
+Start the backend application in development mode:
 ```bash
 npm run dev
 ```
-> The API will be available at `http://localhost:5000`
+> **Note:** The API will listen for requests at `http://localhost:5000`
 
-### 3. Start the Frontend
+### 3. Run the Frontend Application
 
-Open a new terminal window:
+Open a new terminal session, navigate to the `frontend` folder, and start the Vite development server:
 
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-> The frontend application will be available at `http://localhost:5173`
+> **Note:** The web interface is accessible at `http://localhost:5173`
 
 ---
 
-## 🗄️ Database Commands Reference
+## 🗄️ CLI Commands Reference
 
-Run these from within the `backend/` directory:
+Available commands within the `backend/` directory:
 
-| Command | Description |
+| Command | Action |
 |---|---|
-| `npm run db:migrate` | Create a new migration after editing `schema.prisma` |
-| `npm run db:deploy`  | Apply committed migrations (ideal for fresh setups) |
-| `npm run db:seed`    | Insert demo seed data into the database |
-| `npm run db:reset`   | Drop, recreate, migrate, and seed the local database |
-| `npm run db:studio`  | Open Prisma Studio (visual DB browser) at `localhost:5555` |
-| `npm run prisma:generate` | Regenerate Prisma Client after schema changes |
+| `npm run db:migrate` | Generate a migration file after modifying `schema.prisma` |
+| `npm run db:deploy`  | Apply all pending migrations directly to the database |
+| `npm run db:seed`    | Seed the database with initial demo configurations |
+| `npm run db:reset`   | Completely drop, recreate, migrate, and re-seed the DB |
+| `npm run db:studio`  | Launch Prisma Studio (visual database UI) at `localhost:5555` |
+| `npm run prisma:generate` | Update the Prisma Client following schema updates |
+
+---
+
+## 👥 Contributors
+
+- **Nigam Vaghani**
+- **Dhanesh Vaghasiya**
+- **Rohit Sharma**
 
 ---
 
 <div align="center">
-  <i>Developed for the 2026 Odoo Hackathon</i>
+  <i>Proudly engineered for the 2026 Odoo Hackathon.</i>
 </div>
