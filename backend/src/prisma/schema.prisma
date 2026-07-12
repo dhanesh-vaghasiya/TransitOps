@@ -1,14 +1,258 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  active
+  inactive
+
+  @@map("user_status")
+}
+
+enum VehicleStatus {
+  available
+  on_trip
+  in_shop
+  retired
+
+  @@map("vehicle_status")
+}
+
+enum VehicleType {
+  van
+  truck
+  lorry
+  bike
+  car
+  bus
+
+  @@map("vehicle_type")
+}
+
+enum DriverStatus {
+  available
+  on_trip
+  off_duty
+  suspended
+
+  @@map("driver_status")
+}
+
+enum LicenseCategory {
+  A
+  B
+  C
+  D
+  E
+  F
+
+  @@map("license_category")
+}
+
+enum TripStatus {
+  draft
+  dispatched
+  completed
+  cancelled
+
+  @@map("trip_status")
+}
+
+enum MaintenanceStatus {
+  scheduled
+  in_progress
+  completed
+  cancelled
+
+  @@map("maintenance_status")
+}
+
+enum MaintenanceType {
+  oil_change
+  tire_replacement
+  engine_repair
+  brake_service
+  general_inspection
+  other
+
+  @@map("maintenance_type")
+}
+
+enum ExpenseCategory {
+  toll
+  parking
+  fine
+  insurance
+  other
+
+  @@map("expense_category")
+}
+
+model Role {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique @db.VarChar(50)
+  description String?    @db.Text
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
+  users       UserRole[]
+
+  @@map("roles")
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique @db.VarChar(255)
+  passwordHash String     @map("password_hash") @db.VarChar(255)
+  fullName     String     @map("full_name") @db.VarChar(255)
+  status       UserStatus @default(active)
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamp(6)
+  roles        UserRole[]
+
+  @@index([status], map: "idx_users_status")
+  @@map("users")
+}
+
+model UserRole {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  roleId     Int      @map("role_id")
+  assignedAt DateTime @default(now()) @map("assigned_at") @db.Timestamp(6)
+  role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId], map: "user_roles_user_id_role_id_key")
+  @@index([roleId], map: "idx_user_roles_role")
+  @@index([userId], map: "idx_user_roles_user")
+  @@map("user_roles")
+}
+
+model Vehicle {
+  id                 Int              @id @default(autoincrement())
+  registrationNumber String           @unique @map("registration_number") @db.VarChar(50)
+  name               String           @db.VarChar(255)
+  model              String?          @db.VarChar(255)
+  type               VehicleType
+  maxLoadCapacity    Decimal          @map("max_load_capacity") @db.Decimal(10, 2)
+  odometer           Decimal          @default(0) @db.Decimal(10, 2)
+  acquisitionCost    Decimal          @default(0) @map("acquisition_cost") @db.Decimal(12, 2)
+  status             VehicleStatus    @default(available)
+  createdAt          DateTime         @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt          DateTime         @updatedAt @map("updated_at") @db.Timestamp(6)
+  expenses           Expense[]
+  fuelLogs           FuelLog[]
+  maintenanceLogs    MaintenanceLog[]
+  trips              Trip[]
+
+  @@index([status], map: "idx_vehicles_status")
+  @@index([type], map: "idx_vehicles_type")
+  @@map("vehicles")
+}
+
+model Driver {
+  id              Int             @id @default(autoincrement())
+  name            String          @db.VarChar(255)
+  licenseNumber   String          @unique @map("license_number") @db.VarChar(100)
+  licenseCategory LicenseCategory @map("license_category")
+  licenseExpiry   DateTime        @map("license_expiry") @db.Date
+  contactNumber   String?         @map("contact_number") @db.VarChar(20)
+  safetyScore     Decimal         @default(100.00) @map("safety_score") @db.Decimal(4, 2)
+  status          DriverStatus    @default(available)
+  createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime        @updatedAt @map("updated_at") @db.Timestamp(6)
+  trips           Trip[]
+
+  @@index([status], map: "idx_drivers_status")
+  @@index([licenseExpiry], map: "idx_drivers_license_expiry")
+  @@index([name], map: "idx_drivers_name")
+  @@map("drivers")
+}
+
+model Trip {
+  id              Int        @id @default(autoincrement())
+  tripNumber      String     @unique @map("trip_number") @db.VarChar(50)
+  vehicleId       Int        @map("vehicle_id")
+  driverId        Int        @map("driver_id")
+  source          String     @db.VarChar(255)
+  destination     String     @db.VarChar(255)
+  cargoWeight     Decimal    @map("cargo_weight") @db.Decimal(10, 2)
+  plannedDistance Decimal    @map("planned_distance") @db.Decimal(10, 2)
+  actualDistance  Decimal?   @map("actual_distance") @db.Decimal(10, 2)
+  fuelConsumed    Decimal?   @map("fuel_consumed") @db.Decimal(10, 2)
+  status          TripStatus @default(draft)
+  startedAt       DateTime?  @map("started_at") @db.Timestamp(6)
+  completedAt     DateTime?  @map("completed_at") @db.Timestamp(6)
+  createdAt       DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime   @updatedAt @map("updated_at") @db.Timestamp(6)
+  driver          Driver     @relation(fields: [driverId], references: [id])
+  vehicle         Vehicle    @relation(fields: [vehicleId], references: [id])
+  expenses        Expense[]
+  fuelLogs        FuelLog[]
+
+  @@index([status], map: "idx_trips_status")
+  @@index([vehicleId], map: "idx_trips_vehicle")
+  @@index([driverId], map: "idx_trips_driver")
+  @@index([createdAt], map: "idx_trips_dates")
+  @@map("trips")
+}
+
+model MaintenanceLog {
+  id              Int               @id @default(autoincrement())
+  workOrderNumber String            @unique @map("work_order_number") @db.VarChar(50)
+  vehicleId       Int               @map("vehicle_id")
+  maintenanceType MaintenanceType   @map("maintenance_type")
+  description     String?           @db.Text
+  cost            Decimal           @db.Decimal(10, 2)
+  status          MaintenanceStatus @default(scheduled)
+  startedAt       DateTime?         @map("started_at") @db.Timestamp(6)
+  completedAt     DateTime?         @map("completed_at") @db.Timestamp(6)
+  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamp(6)
+  vehicle         Vehicle           @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId], map: "idx_maintenance_vehicle")
+  @@index([status], map: "idx_maintenance_status")
+  @@map("maintenance_logs")
+}
+
+model FuelLog {
+  id              Int      @id @default(autoincrement())
+  receiptNumber   String?  @unique @map("receipt_number") @db.VarChar(80)
+  tripId          Int?     @map("trip_id")
+  vehicleId       Int      @map("vehicle_id")
+  liters          Decimal  @db.Decimal(10, 2)
+  costPerLiter    Decimal  @map("cost_per_liter") @db.Decimal(10, 2)
+  totalCost       Decimal  @map("total_cost") @db.Decimal(10, 2)
+  odometerReading Decimal  @map("odometer_reading") @db.Decimal(10, 2)
+  loggedAt        DateTime @default(now()) @map("logged_at") @db.Timestamp(6)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  trip            Trip?    @relation(fields: [tripId], references: [id], onDelete: SetNull)
+  vehicle         Vehicle  @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId], map: "idx_fuel_vehicle")
+  @@index([tripId], map: "idx_fuel_trip")
+  @@map("fuel_logs")
+}
+
+model Expense {
+  id            Int             @id @default(autoincrement())
+  expenseNumber String          @unique @map("expense_number") @db.VarChar(50)
+  tripId        Int?            @map("trip_id")
+  vehicleId     Int             @map("vehicle_id")
+  category      ExpenseCategory
+  amount        Decimal         @db.Decimal(10, 2)
+  description   String?         @db.Text
+  incurredAt    DateTime        @default(now()) @map("incurred_at") @db.Timestamp(6)
+  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  trip          Trip?           @relation(fields: [tripId], references: [id], onDelete: SetNull)
+  vehicle       Vehicle         @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId], map: "idx_expenses_vehicle")
+  @@index([tripId], map: "idx_expenses_trip")
+  @@index([category], map: "idx_expenses_category")
+  @@map("expenses")
 }
