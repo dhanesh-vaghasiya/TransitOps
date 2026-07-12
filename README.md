@@ -15,20 +15,17 @@ An end-to-end operational control center for modern transport fleets, featuring 
 
 ## 🛠️ Built With
 
-### Frontend Technologies
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
-![Recharts](https://img.shields.io/badge/recharts-%2322B5BF.svg?style=for-the-badge)
-
-### Backend Technologies
-![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-![Prisma ORM](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
-![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101)
-![JWT Authentication](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
+<div align="center">
+  <img src="https://img.shields.io/badge/React-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/TailwindCSS-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="TailwindCSS" />
+  <img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" alt="React Router" />
+  <img src="https://img.shields.io/badge/Node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS" />
+  <img src="https://img.shields.io/badge/Express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" alt="Express" />
+  <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white" alt="Prisma" />
+  <img src="https://img.shields.io/badge/PostgreSQL-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white" alt="Postgres" />
+  <img src="https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101" alt="Socket.io" />
+</div>
 
 ---
 
@@ -41,6 +38,55 @@ An end-to-end operational control center for modern transport fleets, featuring 
 - **🔧 Maintenance Workflow:** Track service logs, maintenance costs, and active workshop status to calculate fleet health.
 - **🔐 Secure RBAC:** Role-Based Access Control enforcing secure routing and API access for different staff levels.
 - **📄 Automated Reports:** Generate and download PDF analytics reports via PDFKit.
+
+---
+
+## 📸 Platform Previews
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <b>1. Secure Login & RBAC</b><br/>
+      <img src="screenshots/01-login.png" alt="Login Page" width="100%">
+    </td>
+    <td width="50%" align="center">
+      <b>2. Central Command Dashboard</b><br/>
+      <img src="screenshots/02-dashboard.png" alt="Dashboard" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <b>3. Fleet Status</b><br/>
+      <img src="screenshots/03-fleet.png" alt="Fleet" width="100%">
+    </td>
+    <td width="50%" align="center">
+      <b>4. Driver Personnel</b><br/>
+      <img src="screenshots/04-drivers.png" alt="Drivers" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <b>5. Active Trips & Dispatch</b><br/>
+      <img src="screenshots/05-trips.png" alt="Trips" width="100%">
+    </td>
+    <td width="50%" align="center">
+      <b>6. Workshop & Maintenance</b><br/>
+      <img src="screenshots/06-maintenance.png" alt="Maintenance" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <b>7. Financials & Fuel Log</b><br/>
+      <img src="screenshots/07-fuel.png" alt="Fuel" width="100%">
+    </td>
+    <td width="50%" align="center">
+      <b>8. Performance Analytics</b><br/>
+      <img src="screenshots/08-analytics.png" alt="Analytics" width="100%">
+    </td>
+  </tr>
+</table>
+
+
 
 ---
 
