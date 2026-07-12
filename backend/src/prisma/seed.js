@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient, LicenseCategory } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
@@ -211,7 +211,7 @@ async function seedDrivers() {
     {
       name: 'Alex',
       licenseNumber: 'LIC-ALEX-001',
-      licenseCategory: 'van',
+      licenseCategory: LicenseCategory.van,
       licenseExpiry: new Date('2028-05-20'),
       contactNumber: '555-0101',
       safetyScore: '98.50',
@@ -220,7 +220,7 @@ async function seedDrivers() {
     {
       name: 'John',
       licenseNumber: 'LIC-JOHN-002',
-      licenseCategory: 'truck',
+      licenseCategory: LicenseCategory.truck,
       licenseExpiry: new Date('2027-11-15'),
       contactNumber: '555-0102',
       safetyScore: '95.00',
@@ -229,7 +229,7 @@ async function seedDrivers() {
     {
       name: 'Priya',
       licenseNumber: 'LIC-PRIYA-003',
-      licenseCategory: 'lorry',
+      licenseCategory: LicenseCategory.lorry,
       licenseExpiry: new Date('2029-02-10'),
       contactNumber: '555-0103',
       safetyScore: '99.00',
@@ -238,7 +238,7 @@ async function seedDrivers() {
     {
       name: 'Suresh',
       licenseNumber: 'LIC-SURESH-004',
-      licenseCategory: 'van',
+      licenseCategory: LicenseCategory.van,
       licenseExpiry: new Date('2026-12-31'),
       contactNumber: '555-0104',
       safetyScore: '92.50',

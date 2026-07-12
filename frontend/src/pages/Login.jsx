@@ -31,32 +31,30 @@ const Login = () => {
   return (
     <div className="flex min-h-screen w-full bg-surface">
       {/* Brand Panel - 35% */}
-      <div className="hidden lg:flex w-[35%] bg-primary flex-col justify-between p-12 relative overflow-hidden">
+      <div className="hidden lg:flex w-[35%] bg-primary flex-col justify-center items-center p-12 relative overflow-hidden gap-16">
         {/* Mesh grid background */}
         <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
         
-        <div className="relative z-10">
-          <h1 className="text-3xl font-bold text-white tracking-tight mb-2">TransitOps</h1>
-          <p className="text-primary-foreground/80">Command Center v2.0</p>
+        <div className="relative z-10 flex flex-col items-center text-center">
+          <div className="mb-8 p-6 bg-surface-container-highest/20 backdrop-blur rounded-3xl border border-white/10 shadow-xl inline-block">
+            <img src="/logo-dark.jpg" alt="TransitOps Logo" className="h-40 w-40 object-contain" />
+          </div>
+          <h1 className="text-5xl font-bold text-white tracking-tight mb-3">TransitOps</h1>
+          <p className="text-primary-foreground/90 text-lg font-medium">Smart Transport Operations<br/>Platform</p>
         </div>
 
-        <div className="relative z-10 space-y-6">
-          <h2 className="text-4xl font-bold text-white leading-tight">
-            Streamline your<br />fleet operations
-          </h2>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3 text-white/90">
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">✓</div>
-              <span>Real-time fleet tracking</span>
-            </div>
-            <div className="flex items-center space-x-3 text-white/90">
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">✓</div>
-              <span>Automated dispatching</span>
-            </div>
-            <div className="flex items-center space-x-3 text-white/90">
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">✓</div>
-              <span>Maintenance predictive alerts</span>
-            </div>
+        <div className="relative z-10 space-y-5 w-full max-w-sm">
+          <div className="flex items-center space-x-4 text-white font-bold tracking-wide">
+            <span className="material-symbols-outlined text-white/80">monitoring</span>
+            <span className="uppercase text-sm">Real-time Telemetry</span>
+          </div>
+          <div className="flex items-center space-x-4 text-white font-bold tracking-wide">
+            <span className="material-symbols-outlined text-white/80">route</span>
+            <span className="uppercase text-sm">Dynamic Routing</span>
+          </div>
+          <div className="flex items-center space-x-4 text-white font-bold tracking-wide">
+            <span className="material-symbols-outlined text-white/80">security</span>
+            <span className="uppercase text-sm">Safety Compliance</span>
           </div>
         </div>
       </div>

@@ -1,6 +1,9 @@
 import React from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const Navbar = () => {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <header className="sticky top-0 z-10 flex justify-between items-center px-6 py-3 bg-surface-container/80 backdrop-blur-md border-b border-outline-variant">
       <div className="relative">
@@ -13,6 +16,15 @@ const Navbar = () => {
         />
       </div>
       <div className="flex items-center gap-4">
+        <button 
+          onClick={toggleTheme}
+          className="text-on-surface-variant hover:text-on-surface transition-colors"
+          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+        >
+          <span className="material-symbols-outlined">
+            {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+          </span>
+        </button>
         <button className="relative text-on-surface-variant hover:text-on-surface transition-colors">
           <span className="material-symbols-outlined">notifications</span>
           <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full shimmer-glow"></span>
