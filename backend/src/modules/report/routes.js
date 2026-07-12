@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('./report.controller');
-const { authenticate } = require('../../middleware/auth.middleware');
-const { allRoles } = require('../../middleware/rbac.middleware');
+const auth = require('../../middleware/auth');
 
-router.get('/dashboard', authenticate, allRoles, controller.getDashboardKPIs);
+router.get('/dashboard', auth, controller.getDashboardKPIs);
 
 module.exports = router;
