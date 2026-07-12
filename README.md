@@ -2,63 +2,47 @@
 
 TransitOps is an end-to-end transport operations platform with a React SPA frontend and a Node.js/Express REST API backend, backed by PostgreSQL and Prisma.
 
+---
+
 ## Prerequisites
 
 - Node.js 18+
 - PostgreSQL 15+
-- Git
 
-## 1. Project Setup
+---
 
-Clone the repository and install dependencies for both the frontend and backend:
+## Backend Setup
 
 ```bash
-# Terminal 1 - Backend Setup
 cd backend
-npm install
-
-# Terminal 2 - Frontend Setup
-cd ../frontend
 npm install
 ```
 
-## 2. Environment Configuration
-
-Copy the example environment file in the backend:
+Create the environment file:
 
 ```bash
-cd backend
 cp .env.example .env
 ```
 *(On Windows: `Copy-Item .env.example .env`)*
 
-The `.env` file is pre-configured with the default database credentials for local development.
+Edit `backend/.env`:
 
-## 3. Database Setup
-
-You need to create the database and user before running the server. Run the following SQL script in your PostgreSQL client (pgAdmin, DBeaver, or psql):
-
-```sql
-CREATE USER transitops_user WITH PASSWORD 'transitops_password';
-ALTER USER transitops_user CREATEDB;
-CREATE DATABASE transitops OWNER transitops_user;
+```env
+DATABASE_URL="postgresql://your_user:your_password@localhost:5432/transitops"
+PORT=5000
+NODE_ENV=development
 ```
 
-## 4. Run Migrations & Seed Data
+### Database Migration
 
-Once the database is created, navigate to the `backend` folder and apply the schema and demo data:
+Apply migrations and seed the database:
 
 ```bash
-cd backend
-npx prisma migrate dev
+npm run db:deploy
 npm run db:seed
 ```
 
-This step sets up the tables, SQL triggers, reporting views, and populates the database with the hackathon demo data (Vehicles, Drivers, Trips).
-
-## 5. Running Locally
-
-Because the frontend and backend are separate services, you should run them in two different terminal windows.
+### Start the backend
 
 **Terminal 1 (Backend):**
 ```bash
@@ -67,19 +51,32 @@ npm run dev
 ```
 - API runs on `http://localhost:5000/api`
 
-**Terminal 2 (Frontend):**
+Backend runs at: `http://localhost:5000`
+
+---
+
+## Frontend Setup
+
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
 - Frontend app runs on `http://localhost:5173`
 
+Frontend runs at: `http://localhost:5173`
+
 ---
 
-### Database Management (Prisma Studio)
-To easily view and edit data visually, you can start Prisma Studio from the backend folder:
-```bash
-cd backend
-npm run db:studio
-```
-This opens a web UI at `http://localhost:5555`.
+## Database Commands
+
+Run from the `backend/` folder:
+
+| Command | Description |
+|---|---|
+| `npm run db:migrate` | Create a new migration after editing `schema.prisma` |
+| `npm run db:deploy` | Apply committed migrations (use for setup & servers) |
+| `npm run db:seed` | Insert seed/demo data |
+| `npm run db:reset` | Drop, recreate, migrate, and seed the local database |
+| `npm run db:studio` | Open Prisma Studio (visual DB browser) |
+| `npm run prisma:generate` | Regenerate Prisma Client after schema changes |
