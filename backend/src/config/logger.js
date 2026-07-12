@@ -1,8 +1,8 @@
 const winston = require('winston');
-const env = require('./env');
+const nodeEnv = process.env.NODE_ENV || 'development';
 
 const logger = winston.createLogger({
-  level: env.NODE_ENV === 'development' ? 'debug' : 'info',
+  level: nodeEnv === 'development' ? 'debug' : 'info',
   format: winston.format.combine(
     winston.format.timestamp({
       format: 'YYYY-MM-DD HH:mm:ss',
@@ -18,7 +18,7 @@ const logger = winston.createLogger({
   ],
 });
 
-if (env.NODE_ENV !== 'production') {
+if (nodeEnv !== 'production') {
   logger.add(
     new winston.transports.Console({
       format: winston.format.combine(

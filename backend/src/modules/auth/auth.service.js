@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const prisma = require('../../config/database');
 const ApiError = require('../../utils/ApiError');
-const env = require('../../config/env');
 
 // In-memory lockout tracking: email -> { attempts: number, lockedUntil: Date }
 const loginAttempts = new Map();
@@ -137,7 +136,7 @@ const login = async ({ email, password }) => {
   const userRoles = user.roles.map(ur => ur.role.name);
   const token = jwt.sign(
     { userId: user.id, roles: userRoles },
-    env.JWT_SECRET,
+    process.env.JWT_SECRET || 'supersecretjwtkeythatisatleast32charslong',
     { expiresIn: '8h' }
   );
 

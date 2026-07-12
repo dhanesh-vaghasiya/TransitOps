@@ -3,18 +3,19 @@ const helmet = require('helmet');
 const cors = require('cors');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
-const env = require('./config/env');
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./config/logger');
 // Import routes here later
 
 const app = express();
+const nodeEnv = process.env.NODE_ENV || 'development';
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 
 // Security HTTP headers
 app.use(helmet());
 
 // CORS - allow all in dev, specific in prod
-app.use(cors({ origin: env.NODE_ENV === 'development' ? '*' : env.CLIENT_URL }));
+app.use(cors({ origin: nodeEnv === 'development' ? '*' : clientUrl }));
 
 // Rate limiting
 const limiter = rateLimit({
