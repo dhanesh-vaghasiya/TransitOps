@@ -44,6 +44,52 @@ An end-to-end operational control center for modern transport fleets, featuring 
 
 ---
 
+## 📸 Platform Previews
+
+<details open>
+<summary><b>1. Secure Login & RBAC</b></summary>
+<img src="screenshots/01-login.png" alt="Login Page" width="100%">
+</details>
+
+<details open>
+<summary><b>2. Central Command Dashboard</b></summary>
+<img src="screenshots/02-dashboard.png" alt="Dashboard" width="100%">
+</details>
+
+<details>
+<summary><b>3. Fleet Status</b></summary>
+<img src="screenshots/03-fleet.png" alt="Fleet" width="100%">
+</details>
+
+<details>
+<summary><b>4. Driver Personnel</b></summary>
+<img src="screenshots/04-drivers.png" alt="Drivers" width="100%">
+</details>
+
+<details>
+<summary><b>5. Active Trips & Dispatch</b></summary>
+<img src="screenshots/05-trips.png" alt="Trips" width="100%">
+</details>
+
+<details>
+<summary><b>6. Workshop & Maintenance</b></summary>
+<img src="screenshots/06-maintenance.png" alt="Maintenance" width="100%">
+</details>
+
+<details>
+<summary><b>7. Financials & Fuel Log</b></summary>
+<img src="screenshots/07-fuel.png" alt="Fuel" width="100%">
+</details>
+
+<details>
+<summary><b>8. Performance Analytics</b></summary>
+<img src="screenshots/08-analytics.png" alt="Analytics" width="100%">
+</details>
+
+
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
