@@ -209,6 +209,30 @@ async function seedOperations(vehicles, drivers) {
     await prisma.trip.upsert({ where: { tripNumber: t.tripNumber }, update: t, create: t });
   }
 
+  // Add more historical trips to populate the Monthly Revenue chart (spanning up to 365 days ago)
+  for (let i = 1; i <= 100; i++) {
+    const daysAgo = Math.floor(Math.random() * 365);
+    const completed = new Date(Date.now() - 86400000 * daysAgo);
+    const started = new Date(completed.getTime() - 86400000 * (1 + Math.random()));
+    const weight = 500 + Math.floor(Math.random() * 15000); // 500 to 15500
+    const distance = 20 + Math.floor(Math.random() * 500); // 20 to 520
+    const histTrip = {
+      tripNumber: `TR-HIST-${i}`,
+      vehicleId: getV(i % 3 === 0 ? 'TRUCK-12' : (i % 2 === 0 ? 'VAN-10' : 'BUS-03')),
+      driverId: getD(i % 3 === 0 ? 'Sarah Connor' : (i % 2 === 0 ? 'Linda Wu' : 'Raj Singh')),
+      source: `Hist Source ${i}`,
+      destination: `Hist Dest ${i}`,
+      cargoWeight: weight.toString(),
+      plannedDistance: distance.toString(),
+      actualDistance: (distance + (Math.random() * 20 - 5)).toFixed(2), // slight variance
+      fuelConsumed: (distance / (4 + Math.random() * 4)).toFixed(2), // varied fuel efficiency
+      status: 'completed',
+      startedAt: started,
+      completedAt: completed
+    };
+    await prisma.trip.upsert({ where: { tripNumber: histTrip.tripNumber }, update: histTrip, create: histTrip });
+  }
+
   const tr1 = await prisma.trip.findUnique({ where: { tripNumber: 'TR-2026-001' }});
   const tr2 = await prisma.trip.findUnique({ where: { tripNumber: 'TR-2026-002' }});
   const tr8 = await prisma.trip.findUnique({ where: { tripNumber: 'TR-2026-008' }});
@@ -260,6 +284,40 @@ async function seedOperations(vehicles, drivers) {
     where: { expenseNumber: 'EX-303' }, update: {},
     create: { expenseNumber: 'EX-303', tripId: null, vehicleId: getV('BUS-01'), category: 'insurance', amount: '1200.00', description: 'Annual Insurance Renewal', incurredAt: new Date(Date.now() - 86400000 * 30) }
   });
+
+  // Add more historical Fuel Logs
+  for (let i = 1; i <= 30; i++) {
+    const daysAgo = 90 - (i * 2);
+    await prisma.fuelLog.upsert({
+      where: { receiptNumber: `FL-HIST-${i}` }, update: {},
+      create: { 
+        receiptNumber: `FL-HIST-${i}`, 
+        vehicleId: getV(i % 2 === 0 ? 'VAN-05' : 'TRUCK-11'), 
+        liters: (30 + (i % 5) * 10).toString(), 
+        costPerLiter: (1.40 + (i % 10) * 0.01).toFixed(2), 
+        totalCost: ((30 + (i % 5) * 10) * (1.40 + (i % 10) * 0.01)).toFixed(2), 
+        odometerReading: (40000 + i * 250).toString(), 
+        loggedAt: new Date(Date.now() - 86400000 * daysAgo) 
+      }
+    });
+  }
+
+  // Add more historical Expenses
+  const categories = ['toll', 'parking', 'fine', 'other'];
+  for (let i = 1; i <= 35; i++) {
+    const daysAgo = 85 - (i * 2);
+    await prisma.expense.upsert({
+      where: { expenseNumber: `EX-HIST-${i}` }, update: {},
+      create: { 
+        expenseNumber: `EX-HIST-${i}`, 
+        vehicleId: getV(i % 3 === 0 ? 'BUS-01' : (i % 2 === 0 ? 'CAR-07' : 'VAN-05')), 
+        category: categories[i % categories.length], 
+        amount: (15 + (i % 8) * 12.5).toFixed(2), 
+        description: `Operational historic expense ${i}`, 
+        incurredAt: new Date(Date.now() - 86400000 * daysAgo) 
+      }
+    });
+  }
 }
 
 async function main() {
