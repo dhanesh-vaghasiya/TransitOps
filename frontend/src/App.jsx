@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-
+import { AuthProvider } from './contexts/AuthContext';
 import VehicleList from './pages/Vehicles/VehicleList';
 import TripsPage from './pages/Trips/index';
 import FuelExpensePage from './pages/FuelExpense/index';
