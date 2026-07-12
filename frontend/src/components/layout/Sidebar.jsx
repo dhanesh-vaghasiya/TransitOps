@@ -18,7 +18,8 @@ const Sidebar = () => {
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 flex flex-col z-20 py-6 pl-6 pr-2 bg-transparent pointer-events-none">
-      <div className="px-4 mb-8 pointer-events-auto">
+      <div className="px-4 mb-8 pointer-events-auto flex items-center gap-3">
+        <img src="/logo-dark.jpg" alt="Logo" className="h-8 w-auto rounded-lg shadow-sm" />
         <div className="font-outfit font-bold text-primary text-display-lg-mobile leading-none tracking-tight drop-shadow-md">TransitOps</div>
       </div>
       <nav className="flex-1 space-y-2 overflow-y-auto pr-2 pointer-events-auto">

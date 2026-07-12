@@ -33,7 +33,10 @@ const Login = () => {
       {/* Brand Panel - 40% */}
       <div className="hidden lg:flex w-[40%] flex-col justify-between p-12 relative overflow-hidden bg-black/20 backdrop-blur-md border-r border-white/5 shadow-2xl">
         <div className="relative z-10">
-          <h1 className="text-3xl font-bold text-white tracking-tight mb-2">TransitOps</h1>
+          <div className="flex items-center gap-3 mb-4">
+            <img src="/logo-dark.jpg" alt="TransitOps Logo" className="h-10 w-auto rounded-xl shadow-lg" />
+            <h1 className="text-3xl font-bold text-white tracking-tight">TransitOps</h1>
+          </div>
           <p className="text-primary font-medium tracking-wide uppercase text-sm">Command Center v2.0</p>
         </div>
 
