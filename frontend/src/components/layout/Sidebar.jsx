@@ -15,7 +15,7 @@ const navItems = [
 ];
 
 const Sidebar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, settings } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -30,9 +30,8 @@ const Sidebar = () => {
   const roleLabels = {
     fleet_manager: 'Fleet Manager',
     dispatcher: 'Dispatcher',
-    driver: 'Driver',
     safety_officer: 'Safety Officer',
-    finance_manager: 'Finance Manager'
+    financial_analyst: 'Financial Analyst'
   };
 
   const primaryRole = user?.roles?.[0] ? roleLabels[user.roles[0]] || 'User' : 'User';

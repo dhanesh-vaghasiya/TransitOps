@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from '../../components/ui/Modal';
 import StatusPill from '../../components/ui/StatusPill';
 import { dispatchTrip, completeTrip, cancelTrip } from '../../services/tripService';
+import { useSettings } from '../../contexts/SettingsContext';
 
 const INITIAL_COMPLETE = {
   finalOdometer: '',
@@ -21,7 +22,8 @@ const InfoRow = ({ icon, label, value }) => (
   </div>
 );
 
-const TripDetail = ({ trip, onClose, onActionDone }) => {
+const TripDetail = ({ trip, onClose, onActionDone, canMutate = true }) => {
+  const { formatDistance, settings } = useSettings();
   const [completing, setCompleting] = useState(false);
   const [completeForm, setCompleteForm] = useState(INITIAL_COMPLETE);
   const [dispatching, setDispatching] = useState(false);
@@ -99,13 +101,13 @@ const TripDetail = ({ trip, onClose, onActionDone }) => {
         <InfoRow icon="directions_bus" label="Vehicle" value={`${trip.vehicle?.name} (${trip.vehicle?.registrationNumber})`} />
         <InfoRow icon="person" label="Driver" value={trip.driver?.name} />
         <InfoRow icon="inventory_2" label="Cargo Weight" value={`${parseFloat(trip.cargoWeight).toFixed(1)} kg`} />
-        <InfoRow icon="straighten" label="Planned Distance" value={`${parseFloat(trip.plannedDistance).toFixed(1)} km`} />
+        <InfoRow icon="straighten" label="Planned Distance" value={formatDistance(trip.plannedDistance)} />
         <InfoRow icon="schedule" label="Created" value={formatDate(trip.createdAt)} />
         <InfoRow icon="local_shipping" label="Departed" value={formatDate(trip.startedAt)} />
         {trip.status === 'completed' && (
           <>
             <InfoRow icon="check_circle" label="Completed" value={formatDate(trip.completedAt)} />
-            <InfoRow icon="speed" label="Actual Distance" value={trip.actualDistance ? `${parseFloat(trip.actualDistance).toFixed(1)} km` : '—'} />
+            <InfoRow icon="speed" label="Actual Distance" value={trip.actualDistance ? formatDistance(trip.actualDistance) : '—'} />
             <InfoRow icon="local_gas_station" label="Fuel Consumed" value={trip.fuelConsumed ? `${parseFloat(trip.fuelConsumed).toFixed(1)} L` : '—'} />
           </>
         )}
@@ -125,7 +127,7 @@ const TripDetail = ({ trip, onClose, onActionDone }) => {
           <p className="text-label-caps text-on-surface-variant uppercase tracking-widest mb-2">Complete Trip</p>
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className={labelClass}>Final Odometer (km)</label>
+              <label className={labelClass}>Final Odometer ({settings?.distanceUnit || 'km'})</label>
               <input
                 type="number"
                 min="0.01"
@@ -189,46 +191,57 @@ const TripDetail = ({ trip, onClose, onActionDone }) => {
 
       {/* Action buttons */}
       <div className="flex gap-2 pt-2 border-t border-outline-variant">
-        {trip.status === 'draft' && (
-          <button
-            onClick={handleDispatch}
-            disabled={dispatching}
-            className="flex-1 py-2.5 rounded-lg bg-primary text-on-primary text-body-sm font-medium hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-1"
-            data-element-id="detail-dispatch-btn"
-          >
-            <span className="material-symbols-outlined text-[15px]">send</span>
-            {dispatching ? 'Dispatching…' : 'Dispatch'}
-          </button>
+        {canMutate && (
+          <>
+            {trip.status === 'draft' && (
+              <button
+                onClick={handleDispatch}
+                disabled={dispatching}
+                className="flex-1 py-2.5 rounded-lg bg-primary text-on-primary text-body-sm font-medium hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-1"
+                data-element-id="detail-dispatch-btn"
+              >
+                <span className="material-symbols-outlined text-[15px]">send</span>
+                {dispatching ? 'Dispatching…' : 'Dispatch'}
+              </button>
+            )}
+
+            {trip.status === 'dispatched' && !showCompleteForm && (
+              <button
+                onClick={() => {
+                  setShowCompleteForm(true);
+                  setCompleteForm({
+                    finalOdometer: trip.vehicle ? (parseFloat(trip.vehicle.odometer) + parseFloat(trip.plannedDistance)).toFixed(1) : '',
+                    fuelConsumed: '',
+                    fuelCostPerLiter: '',
+                  });
+                }}
+                className="flex-1 py-2.5 rounded-lg bg-emerald-600 text-white text-body-sm font-medium hover:opacity-90 flex items-center justify-center gap-1"
+                data-element-id="detail-complete-btn"
+              >
+                <span className="material-symbols-outlined text-[15px]">check_circle</span>
+                Complete Trip
+              </button>
+            )}
+
+            {(trip.status === 'draft' || trip.status === 'dispatched') && (
+              <button
+                onClick={handleCancel}
+                disabled={cancelling}
+                className="px-4 py-2.5 rounded-lg border border-red-500/30 text-red-400 text-body-sm hover:bg-red-500/10 disabled:opacity-50 flex items-center gap-1 transition-all"
+                data-element-id="detail-cancel-btn"
+              >
+                <span className="material-symbols-outlined text-[15px]">block</span>
+                {cancelling ? 'Cancelling…' : 'Cancel Trip'}
+              </button>
+            )}
+          </>
         )}
 
-        {trip.status === 'dispatched' && !showCompleteForm && (
-          <button
-            onClick={() => {
-              setShowCompleteForm(true);
-              setCompleteForm({
-                finalOdometer: trip.vehicle ? (parseFloat(trip.vehicle.odometer) + parseFloat(trip.plannedDistance)).toFixed(1) : '',
-                fuelConsumed: '',
-                fuelCostPerLiter: '',
-              });
-            }}
-            className="flex-1 py-2.5 rounded-lg bg-emerald-600 text-white text-body-sm font-medium hover:opacity-90 flex items-center justify-center gap-1"
-            data-element-id="detail-complete-btn"
-          >
-            <span className="material-symbols-outlined text-[15px]">check_circle</span>
-            Complete Trip
-          </button>
-        )}
-
-        {(trip.status === 'draft' || trip.status === 'dispatched') && (
-          <button
-            onClick={handleCancel}
-            disabled={cancelling}
-            className="px-4 py-2.5 rounded-lg border border-red-500/30 text-red-400 text-body-sm hover:bg-red-500/10 disabled:opacity-50 flex items-center gap-1 transition-all"
-            data-element-id="detail-cancel-btn"
-          >
-            <span className="material-symbols-outlined text-[15px]">block</span>
-            {cancelling ? 'Cancelling…' : 'Cancel Trip'}
-          </button>
+        {!canMutate && (
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-body-sm">
+            <span className="material-symbols-outlined text-[15px]">visibility</span>
+            View-only access — contact a Dispatcher to modify this trip
+          </div>
         )}
 
         <button

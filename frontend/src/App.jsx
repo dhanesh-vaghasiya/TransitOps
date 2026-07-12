@@ -10,6 +10,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import Drivers from './pages/Drivers';
 import Maintenance from './pages/Maintenance';
 import Dashboard from './pages/Dashboard/Dashboard';
+import SettingsPage from './pages/Settings/SettingsPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="drivers" element={<Drivers />} />
           <Route path="fleet" element={<VehicleList />} />
           <Route path="maintenance" element={<Maintenance />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
       </BrowserRouter>

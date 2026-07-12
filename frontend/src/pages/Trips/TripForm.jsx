@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getDispatchPool, createTrip, dispatchTrip } from '../../services/tripService';
 import GlassCard from '../../components/ui/GlassCard';
+import { useSettings } from '../../contexts/SettingsContext';
 
 const STEPS = ['Draft', 'Dispatched', 'Completed'];
 
@@ -62,6 +63,7 @@ const INITIAL_FORM = {
 };
 
 const TripForm = ({ onCreated }) => {
+  const { settings } = useSettings();
   const [form, setForm] = useState(INITIAL_FORM);
   const [pool, setPool] = useState({ vehicles: [], drivers: [] });
   const [poolLoading, setPoolLoading] = useState(true);
@@ -255,7 +257,7 @@ const TripForm = ({ onCreated }) => {
             />
           </div>
           <div>
-            <label htmlFor="plannedDistance" className={labelClass}>Distance (km)</label>
+            <label htmlFor="plannedDistance" className={labelClass}>Distance ({settings?.distanceUnit || 'km'})</label>
             <input
               id="plannedDistance"
               name="plannedDistance"

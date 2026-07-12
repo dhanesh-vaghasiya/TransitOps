@@ -4,6 +4,8 @@ import SegmentedControl from '../../components/common/SegmentedControl';
 import DataTable from '../../components/common/DataTable';
 import StatusPill from '../../components/common/StatusPill';
 import DriverForm from './DriverForm';
+import { useAuth } from '../../contexts/AuthContext';
+import { hasMutationAccess } from '../../utils/rbac';
 
 const filterOptions = [
   { label: 'All', value: 'all' },
@@ -24,6 +26,9 @@ const DriverList = () => {
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingDriver, setEditingDriver] = useState(null);
+
+  const { user } = useAuth();
+  const canMutate = hasMutationAccess(user?.roles, 'drivers');
 
   const fetchDrivers = async () => {
     try {
@@ -128,15 +133,25 @@ const DriverList = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => setIsFormOpen(true)}
-          className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 flex items-center gap-2"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Add Driver
-        </button>
+        <div className="flex gap-2">
+          {!canMutate && (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant text-on-surface-variant text-body-sm">
+              <span className="material-symbols-outlined text-[16px]">visibility</span>
+              View Only
+            </span>
+          )}
+          {canMutate && (
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Add Driver
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="mb-6 flex justify-start">
@@ -156,7 +171,7 @@ const DriverList = () => {
           <DataTable
             columns={columns}
             data={filteredDrivers}
-            onRowClick={handleEdit}
+            onRowClick={canMutate ? handleEdit : undefined}
           />
         )}
       </div>

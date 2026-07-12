@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../services/apiClient';
+import { setLiveRbacMatrix } from '../utils/rbac';
 
 const AuthContext = createContext();
 
@@ -7,6 +8,12 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('token'));
+  const [settings, setSettings] = useState({
+    depotName: 'Central Transit Depot',
+    currency: 'USD',
+    distanceUnit: 'km',
+    rbacMatrix: null,
+  });
 
   useEffect(() => {
     if (token) {
@@ -21,10 +28,19 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
+  useEffect(() => {
+    if (settings && settings.rbacMatrix) {
+      setLiveRbacMatrix(settings.rbacMatrix);
+    }
+  }, [settings?.rbacMatrix]);
+
   const fetchMe = async () => {
     try {
       const response = await api.get('/auth/me');
       setUser(response.data.data.user);
+      if (response.data.data.settings) {
+        setSettings(response.data.data.settings);
+      }
     } catch (error) {
       console.error('Failed to fetch user', error);
       setToken(null);
@@ -36,9 +52,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await api.post('/auth/login', { email, password });
-    const { token, user } = response.data.data;
+    const { token, user, settings } = response.data.data;
     setToken(token);
     setUser(user);
+    if (settings) {
+      setSettings(settings);
+    }
     return user;
   };
 
@@ -47,11 +66,29 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const formatCurrency = (val) => {
+    if (val === undefined || val === null || isNaN(val)) return '—';
+    const c = settings?.currency || 'USD';
+    const locale = c === 'INR' ? 'en-IN' : 'en-US';
+    try {
+      return new Intl.NumberFormat(locale, { style: 'currency', currency: c, maximumFractionDigits: 2 }).format(val);
+    } catch (e) {
+      return `${c} ${parseFloat(val).toFixed(2)}`;
+    }
+  };
+
+  const formatDistance = (val) => {
+    if (val === undefined || val === null || isNaN(val)) return '—';
+    const unit = settings?.distanceUnit || 'km';
+    return `${parseFloat(val).toFixed(0)} ${unit}`;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, settings, setSettings, formatCurrency, formatDistance }}>
       {!loading ? children : <div className="flex h-screen items-center justify-center text-primary">Loading...</div>}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+export const useSettings = () => useContext(AuthContext);

@@ -8,8 +8,15 @@ import { getFuelLogs, createFuelLog } from '../../services/fuelService';
 import { getExpenses, createExpense } from '../../services/expenseService';
 import { getVehicles } from '../../services/vehicleService';
 import { getTrips } from '../../services/tripService';
+import { useSettings } from '../../contexts/SettingsContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { hasMutationAccess } from '../../utils/rbac';
 
 const FuelExpensePage = () => {
+  const { formatCurrency, formatDistance, settings } = useSettings();
+  const { user } = useAuth();
+  const canMutate = hasMutationAccess(user?.roles, 'fuel');
+
   const [fuelLogs, setFuelLogs] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [vehicles, setVehicles] = useState([]);
@@ -170,11 +177,6 @@ const FuelExpensePage = () => {
     }
   };
 
-  // Format currency
-  const formatCurrency = (val) => {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(val);
-  };
-
   // Format datetime
   const formatDateTime = (val) => {
     if (!val) return '—';
@@ -311,22 +313,32 @@ const FuelExpensePage = () => {
           </p>
         </div>
         <div className="flex gap-3">
-          <button
-            onClick={() => setIsFuelModalOpen(true)}
-            className="px-4 py-2.5 rounded-lg bg-surface-container border border-outline-variant text-on-surface font-medium hover:border-primary/50 hover:bg-surface-container-high transition-all flex items-center gap-2 active:scale-98"
-            id="log-fuel-btn"
-          >
-            <span className="material-symbols-outlined text-[18px] text-primary">local_gas_station</span>
-            Log Fuel
-          </button>
-          <button
-            onClick={() => setIsExpenseModalOpen(true)}
-            className="px-4 py-2.5 rounded-lg bg-primary text-on-primary font-medium hover:opacity-90 transition-all flex items-center gap-2 active:scale-98"
-            id="add-expense-btn"
-          >
-            <span className="material-symbols-outlined text-[18px]">add_circle</span>
-            Add Expense
-          </button>
+          {!canMutate && (
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant text-on-surface-variant text-[10px] uppercase font-bold tracking-wider">
+              <span className="material-symbols-outlined text-[14px]">visibility</span>
+              View Only
+            </span>
+          )}
+          {canMutate && (
+            <>
+              <button
+                onClick={() => setIsFuelModalOpen(true)}
+                className="px-4 py-2.5 rounded-lg bg-surface-container border border-outline-variant text-on-surface font-medium hover:border-primary/50 hover:bg-surface-container-high transition-all flex items-center gap-2 active:scale-98"
+                id="log-fuel-btn"
+              >
+                <span className="material-symbols-outlined text-[18px] text-primary">local_gas_station</span>
+                Log Fuel
+              </button>
+              <button
+                onClick={() => setIsExpenseModalOpen(true)}
+                className="px-4 py-2.5 rounded-lg bg-primary text-on-primary font-medium hover:opacity-90 transition-all flex items-center gap-2 active:scale-98"
+                id="add-expense-btn"
+              >
+                <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                Add Expense
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -370,7 +382,7 @@ const FuelExpensePage = () => {
               <div className="py-6 text-center">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Fleet Odo Efficiency</span>
                 <div className="text-[52px] font-outfit font-bold text-primary tracking-tight my-1 select-none active-glow rounded-xl py-2 bg-surface-bright/20 border border-outline-variant/20 inline-block px-6">
-                  {averageEfficiency} <span className="text-title-sm font-normal text-on-surface-variant font-inter">km/L</span>
+                  {averageEfficiency} <span className="text-title-sm font-normal text-on-surface-variant font-inter">{settings?.distanceUnit || 'km'}/L</span>
                 </div>
                 <div className="flex items-center justify-center gap-1.5 mt-2">
                   <span className="material-symbols-outlined text-emerald-400 text-[16px]">trending_up</span>
@@ -470,7 +482,7 @@ const FuelExpensePage = () => {
               <option value="">Select Vehicle</option>
               {vehicles.map((v) => (
                 <option key={v.id} value={v.id}>
-                  {v.name} ({v.registrationNumber}) — Odo: {parseFloat(v.odometer).toFixed(0)} km
+                  {v.name} ({v.registrationNumber}) — Odo: {formatDistance(v.odometer)}
                 </option>
               ))}
             </select>
@@ -526,7 +538,7 @@ const FuelExpensePage = () => {
           </div>
 
           <div>
-            <label htmlFor="fuel-odometerReading" className={labelClass}>Current Odometer (km)</label>
+            <label htmlFor="fuel-odometerReading" className={labelClass}>Current Odometer ({settings?.distanceUnit || 'km'})</label>
             <input
               id="fuel-odometerReading"
               type="number"

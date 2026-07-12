@@ -94,9 +94,14 @@ const login = async ({ email, password }) => {
 
   if (!user || user.status !== 'active') {
     if (user && user.status !== 'active') {
+      await prisma.securityLog.create({
+        data: { action: 'LOGIN_FAILED', details: `Failed login attempt: Account ${email} is inactive`, userId: user.id }
+      });
       throw new ApiError(403, 'Account is inactive');
     }
-    // Track failed attempt for security even if user doesn't exist, though typically we just track if user exists
+    await prisma.securityLog.create({
+      data: { action: 'LOGIN_FAILED', details: `Failed login attempt: Invalid email/credentials for ${email}` }
+    });
     throw new ApiError(401, 'Invalid credentials');
   }
 
@@ -109,9 +114,15 @@ const login = async ({ email, password }) => {
         attempts,
         lockedUntil: new Date(Date.now() + LOCKOUT_DURATION_MS),
       });
+      await prisma.securityLog.create({
+        data: { action: 'ACCOUNT_LOCKOUT', details: `Account ${email} locked out due to too many failed attempts`, userId: user.id }
+      });
       throw new ApiError(403, 'Account is locked due to too many failed login attempts. Please try again later.');
     } else {
       loginAttempts.set(email, { attempts, lockedUntil: null });
+      await prisma.securityLog.create({
+        data: { action: 'LOGIN_FAILED', details: `Failed login attempt: Incorrect password for ${email}`, userId: user.id }
+      });
       throw new ApiError(401, 'Invalid credentials');
     }
   }
@@ -119,12 +130,18 @@ const login = async ({ email, password }) => {
   // Successful login, clear attempts
   loginAttempts.delete(email);
 
+  await prisma.securityLog.create({
+    data: { action: 'LOGIN_SUCCESS', details: `User ${user.email} logged in successfully`, userId: user.id }
+  });
+
   const userRoles = user.roles.map(ur => ur.role.name);
   const token = jwt.sign(
     { userId: user.id, roles: userRoles },
     env.JWT_SECRET,
     { expiresIn: '8h' }
   );
+
+  const settings = await prisma.settings.findFirst();
 
   return {
     token,
@@ -134,7 +151,13 @@ const login = async ({ email, password }) => {
       fullName: user.fullName,
       roles: userRoles,
       status: user.status,
-    }
+    },
+    settings: settings ? {
+      depotName: settings.depotName,
+      currency: settings.currency,
+      distanceUnit: settings.distanceUnit,
+      rbacMatrix: settings.rbacMatrix
+    } : null
   };
 };
 
