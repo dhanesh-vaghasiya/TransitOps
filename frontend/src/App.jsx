@@ -11,7 +11,7 @@ import Drivers from './pages/Drivers';
 import Maintenance from './pages/Maintenance';
 import { AuthProvider } from './contexts/AuthContext';
 
-const Home = () => <div className="p-4 text-white">Dashboard (Phase 9)</div>;
+import Dashboard from './pages/Dashboard/Dashboard';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-          <Route index element={<Home />} />
+          <Route index element={<Dashboard />} />
           <Route path="trips" element={<TripsPage />} />
           <Route path="fuel" element={<FuelExpensePage />} />
           <Route path="drivers" element={<Drivers />} />

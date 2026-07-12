@@ -13,13 +13,15 @@ const DataTable = ({ columns, data, onAction, onRowClick }) => {
                   {col.header}
                 </th>
               ))}
-              <th className="px-6 py-4 text-right text-label-caps text-on-surface-variant uppercase tracking-wider">Actions</th>
+              {onAction && (
+                <th className="px-6 py-4 text-right text-label-caps text-on-surface-variant uppercase tracking-wider">Actions</th>
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant/50">
             {data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + 1} className="px-6 py-8 text-center text-on-surface-variant text-body-md">
+                <td colSpan={columns.length + (onAction ? 1 : 0)} className="px-6 py-8 text-center text-on-surface-variant text-body-md">
                   No data available.
                 </td>
               </tr>
@@ -35,20 +37,16 @@ const DataTable = ({ columns, data, onAction, onRowClick }) => {
                       {col.cell ? col.cell(row) : row[col.accessor]}
                     </td>
                   ))}
-                  <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
-                    <button 
-                      onClick={() => {
-                        if (onAction) {
-                          onAction(row);
-                        } else if (onRowClick) {
-                          onRowClick(row);
-                        }
-                      }}
-                      className="text-on-surface-variant hover:text-primary p-1 rounded-md hover:bg-surface-container-high transition-colors"
-                    >
-                      <MoreVertical size={16} />
-                    </button>
-                  </td>
+                  {onAction && (
+                    <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
+                      <button 
+                        onClick={() => onAction(row)}
+                        className="text-on-surface-variant hover:text-primary p-1 rounded-md hover:bg-surface-container-high transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        <MoreVertical size={16} />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             )}
