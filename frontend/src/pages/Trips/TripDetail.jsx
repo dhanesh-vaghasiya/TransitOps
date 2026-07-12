@@ -203,7 +203,14 @@ const TripDetail = ({ trip, onClose, onActionDone }) => {
 
         {trip.status === 'dispatched' && !showCompleteForm && (
           <button
-            onClick={() => setShowCompleteForm(true)}
+            onClick={() => {
+              setShowCompleteForm(true);
+              setCompleteForm({
+                finalOdometer: trip.vehicle ? (parseFloat(trip.vehicle.odometer) + parseFloat(trip.plannedDistance)).toFixed(1) : '',
+                fuelConsumed: '',
+                fuelCostPerLiter: '',
+              });
+            }}
             className="flex-1 py-2.5 rounded-lg bg-emerald-600 text-white text-body-sm font-medium hover:opacity-90 flex items-center justify-center gap-1"
             data-element-id="detail-complete-btn"
           >

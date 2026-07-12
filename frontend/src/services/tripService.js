@@ -1,6 +1,6 @@
 import api from '../api/axios';
 
-const BASE = '/v1/trips';
+const BASE = '/trips';
 
 /**
  * Fetch all trips, optionally filtered by status.

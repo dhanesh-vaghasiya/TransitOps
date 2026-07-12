@@ -13,6 +13,8 @@ const STATUS_CONFIG = {
   retired:     { label: 'Retired',    className: 'bg-surface-container text-on-surface-variant border border-outline-variant' },
   off_duty:    { label: 'Off Duty',   className: 'bg-amber-500/15 text-amber-300 border border-amber-500/30' },
   suspended:   { label: 'Suspended',  className: 'bg-red-500/15 text-red-400 border border-red-500/30' },
+  cleared:     { label: 'Cleared',    className: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' },
+  pending:     { label: 'Pending',    className: 'bg-amber-500/15 text-amber-300 border border-amber-500/30' },
 };
 
 /**

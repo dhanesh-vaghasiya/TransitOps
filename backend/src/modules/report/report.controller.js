@@ -1,4 +1,5 @@
 const reportService = require('./report.service');
+const exportService = require('./export.service');
 const asyncHandler = require('../../middleware/asyncHandler');
 
 const getDashboardKPIs = asyncHandler(async (req, res) => {
@@ -7,4 +8,18 @@ const getDashboardKPIs = asyncHandler(async (req, res) => {
   res.json({ success: true, data });
 });
 
-module.exports = { getDashboardKPIs };
+const getAnalytics = asyncHandler(async (req, res) => {
+  const data = await reportService.getAnalyticsReport();
+  res.json({ success: true, data });
+});
+
+const exportPDF = asyncHandler(async (req, res) => {
+  const data = await reportService.getAnalyticsReport();
+  
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename="transitops-analytics.pdf"');
+  
+  exportService.generatePDF(data, res);
+});
+
+module.exports = { getDashboardKPIs, getAnalytics, exportPDF };

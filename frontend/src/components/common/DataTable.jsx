@@ -1,7 +1,7 @@
 import React from 'react';
 import { MoreVertical } from 'lucide-react';
 
-const DataTable = ({ columns, data, onAction }) => {
+const DataTable = ({ columns, data, onAction, onRowClick }) => {
   return (
     <div className="glass-card overflow-hidden shadow-xl">
       <div className="overflow-x-auto">
@@ -27,7 +27,11 @@ const DataTable = ({ columns, data, onAction }) => {
               </tr>
             ) : (
               data.map((row, rowIdx) => (
-                <tr key={rowIdx} className="hover:bg-surface-container-high/30 transition-colors group">
+                <tr 
+                  key={rowIdx} 
+                  onClick={() => onRowClick && onRowClick(row)}
+                  className={`hover:bg-surface-container-high/30 transition-colors group ${onRowClick ? 'cursor-pointer' : ''}`}
+                >
                   {columns.map((col, colIdx) => (
                     <td key={colIdx} className="px-6 py-4 text-on-surface text-body-md">
                       {col.cell ? col.cell(row) : row[col.accessor]}

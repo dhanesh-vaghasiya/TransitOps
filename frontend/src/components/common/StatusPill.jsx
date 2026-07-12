@@ -10,10 +10,12 @@ const StatusPill = ({ status }) => {
     colorClass = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
   } else if (['on_trip', 'in_progress', 'dispatched'].includes(normalizedStatus)) {
     colorClass = 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
-    label = 'On Trip';
+    if (normalizedStatus === 'on_trip') label = 'On Trip';
   } else if (['in_shop', 'suspended'].includes(normalizedStatus)) {
     colorClass = 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
     label = 'In Shop';
+  } else if (['scheduled'].includes(normalizedStatus)) {
+    colorClass = 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
   } else if (['retired', 'cancelled'].includes(normalizedStatus)) {
     colorClass = 'bg-rose-500/20 text-rose-400 border border-rose-500/30';
   }
