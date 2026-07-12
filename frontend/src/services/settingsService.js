@@ -1,6 +1,6 @@
 import api from '../api/axios';
 
-const BASE = '/v1/settings';
+const BASE = '/settings';
 
 export const getSettings = () => api.get(BASE);
 export const updateSettings = (data) => api.put(BASE, data);
