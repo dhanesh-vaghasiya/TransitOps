@@ -31,44 +31,40 @@ const Login = () => {
   return (
     <div className="flex min-h-screen w-full bg-transparent">
       {/* Brand Panel - 40% */}
-      <div className="hidden lg:flex w-[40%] flex-col justify-between p-12 relative overflow-hidden bg-black/20 backdrop-blur-md border-r border-white/5 shadow-2xl">
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-4">
-            <img src="/logo-dark.jpg" alt="TransitOps Logo" className="h-10 w-auto rounded-xl shadow-lg" />
-            <h1 className="text-3xl font-bold text-white tracking-tight">TransitOps</h1>
+      <div 
+        className="hidden lg:flex w-[40%] flex-col justify-center items-center p-12 relative overflow-hidden bg-[#9A5013] border-r border-white/5 shadow-2xl"
+        style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.2) 1.5px, transparent 1.5px)', backgroundSize: '24px 24px' }}
+      >
+        <div className="relative z-10 flex flex-col items-center text-center w-full max-w-sm">
+          <div className="bg-[#1C1A17] p-8 rounded-[2rem] shadow-2xl mb-8 border border-white/10">
+            <img src="/logo-dark.jpg" alt="TransitOps Logo" className="w-32 h-auto" />
           </div>
-          <p className="text-primary font-medium tracking-wide uppercase text-sm">Command Center v2.0</p>
-        </div>
-
-        <div className="relative z-10 space-y-6">
-          <h2 className="text-4xl font-bold text-white leading-tight">
-            Streamline your<br />fleet operations
-          </h2>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3 text-white/90">
-              <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary">✓</div>
-              <span>Real-time fleet tracking</span>
+          <h1 className="text-4xl font-bold text-white tracking-tight mb-3">TransitOps</h1>
+          <p className="text-white/80 font-medium tracking-wide text-sm mb-16">Smart Transport Operations Platform</p>
+          
+          <div className="space-y-8 w-full pl-4 text-left">
+            <div className="flex items-center space-x-4 text-white font-bold text-sm tracking-wider">
+              <span className="material-symbols-outlined text-[24px]">analytics</span>
+              <span>REAL-TIME TELEMETRY</span>
             </div>
-            <div className="flex items-center space-x-3 text-white/90">
-              <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary">✓</div>
-              <span>Automated dispatching</span>
+            <div className="flex items-center space-x-4 text-white font-bold text-sm tracking-wider">
+              <span className="material-symbols-outlined text-[24px]">route</span>
+              <span>DYNAMIC ROUTING</span>
             </div>
-            <div className="flex items-center space-x-3 text-white/90">
-              <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary">✓</div>
-              <span>Maintenance predictive alerts</span>
+            <div className="flex items-center space-x-4 text-white font-bold text-sm tracking-wider">
+              <span className="material-symbols-outlined text-[24px]">shield</span>
+              <span>SAFETY COMPLIANCE</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Form Panel - 60% */}
-      <div className="flex-1 flex flex-col justify-center items-center p-8 bg-black/30 backdrop-blur-2xl relative">
-        {/* Subtle inner border for glass effect */}
-        <div className="absolute inset-0 border-l border-white/10 pointer-events-none" />
+      <div className="flex-1 flex flex-col justify-center items-center p-8 bg-surface relative">
         <div className="w-full max-w-md space-y-8">
           <div>
-            <h2 className="text-3xl font-bold text-white text-center">Welcome Back</h2>
-            <p className="mt-2 text-center text-white/60">Sign in to your account to continue</p>
+            <h2 className="text-3xl font-bold text-on-surface text-center">Welcome Back</h2>
+            <p className="mt-2 text-center text-on-surface-variant">Sign in to your account to continue</p>
           </div>
 
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -81,33 +77,33 @@ const Login = () => {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-white/90 mb-1">Email Address</label>
+                <label className="block text-sm font-medium text-on-surface mb-1">Email Address</label>
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70 transition-all placeholder:text-white/30 shadow-inner"
-                  placeholder="name@company.com"
+                  className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-on-surface-variant/50 shadow-sm"
+                  placeholder="manager@company.com"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/90 mb-1">Password</label>
+                <label className="block text-sm font-medium text-on-surface mb-1">Password</label>
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/70 transition-all placeholder:text-white/30 shadow-inner"
+                  className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-on-surface-variant/50 shadow-sm"
                   placeholder="••••••••"
                 />
               </div>
 
               <div className="flex items-center justify-between">
                 <label className="flex items-center space-x-2 cursor-pointer">
-                  <input type="checkbox" className="rounded border-white/20 text-primary focus:ring-primary bg-black/40" />
-                  <span className="text-sm text-white/60">Remember this device</span>
+                  <input type="checkbox" className="rounded border-outline-variant text-primary focus:ring-primary bg-surface-container" />
+                  <span className="text-sm text-on-surface-variant">Remember this device</span>
                 </label>
                 <a href="#" className="text-sm text-primary hover:text-primary-hover font-medium">Forgot password?</a>
               </div>

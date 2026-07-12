@@ -4,7 +4,7 @@ import Select from '../ui/Select';
 
 const FilterBar = ({ filters, setFilters, typeOptions, statusOptions, hideSearch = false }) => {
   return (
-    <div className="flex flex-wrap items-center gap-4 glass-panel p-4 rounded-xl mb-6">
+    <div className="flex flex-wrap items-center gap-4 glass-panel p-4 rounded-xl mb-6 relative z-30">
       
       {typeOptions && (
         <Select
