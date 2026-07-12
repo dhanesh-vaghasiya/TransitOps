@@ -1,0 +1,3 @@
+const { PrismaClient } = require('@prisma/client');
+const p = new PrismaClient();
+p.$queryRaw`SELECT enumlabel FROM pg_enum JOIN pg_type ON pg_enum.enumtypid = pg_type.oid WHERE pg_type.typname = 'license_category'`.then(console.log).finally(() => p.$disconnect());

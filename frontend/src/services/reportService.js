@@ -10,6 +10,20 @@ const getDashboardKPIs = async (filters = {}) => {
   return response.data.data;
 };
 
+const getAnalyticsData = async () => {
+  const response = await apiClient.get('/reports/analytics');
+  return response.data.data;
+};
+
+const exportPDF = async () => {
+  const response = await apiClient.get('/reports/analytics/export.pdf', {
+    responseType: 'blob'
+  });
+  return response.data;
+};
+
 export default {
-  getDashboardKPIs
+  getDashboardKPIs,
+  getAnalyticsData,
+  exportPDF
 };

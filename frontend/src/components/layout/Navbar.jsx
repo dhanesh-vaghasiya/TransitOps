@@ -1,10 +1,12 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   const getInitials = (name) => {
     return name ? name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase() : 'U';
@@ -20,7 +22,16 @@ const Navbar = () => {
       <div className="flex items-center gap-2">
         {/* Search removed as requested */}
       </div>
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={toggleTheme}
+          className="text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-xl hover:bg-surface-container/30"
+          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+        >
+          <span className="material-symbols-outlined">
+            {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+          </span>
+        </button>
         <button className="relative text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-xl hover:bg-surface-container/30">
           <span className="material-symbols-outlined">notifications</span>
           <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error border-2 border-[#150c07] rounded-full shimmer-glow"></span>

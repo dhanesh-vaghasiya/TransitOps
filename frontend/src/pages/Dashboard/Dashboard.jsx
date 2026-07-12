@@ -138,17 +138,15 @@ const Dashboard = () => {
               <div className="glass-panel rounded-xl p-5">
                 <h3 className="text-body-lg font-bold text-on-background font-outfit mb-4">Vehicle Type Distribution</h3>
                 <div className="flex items-center">
-                  <div className="w-24 h-24 relative shrink-0">
+                  <div className="w-24 h-24 relative shrink-0 flex items-center justify-center">
                     <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-on-background z-10">100%</div>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
-                        <Pie cx="50%" cy="50%" data={distributionData} innerRadius={28} outerRadius={40} dataKey="value" stroke="none">
-                          {distributionData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                          ))}
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
+                    <PieChart width={90} height={90}>
+                      <Pie cx={45} cy={45} data={distributionData} innerRadius={30} outerRadius={42} dataKey="value" stroke="none">
+                        {distributionData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                        ))}
+                      </Pie>
+                    </PieChart>
                   </div>
                   <div className="flex-1 ml-6 space-y-3">
                     {distributionData.length === 0 ? (

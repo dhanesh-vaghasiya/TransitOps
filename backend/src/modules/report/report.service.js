@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { calculateOperationalCost } = require('../../utils/helpers');
 const prisma = new PrismaClient();
 
 const getDashboardKPIs = async (filters = {}) => {
@@ -148,4 +149,118 @@ const getDashboardKPIs = async (filters = {}) => {
 
 module.exports = {
   getDashboardKPIs
+};
+
+const getAnalyticsReport = async () => {
+  const trips = await prisma.trip.findMany({
+    where: { status: 'completed' },
+    include: {
+      fuelLogs: true,
+      expenses: true,
+      vehicle: true,
+    }
+  });
+
+  const vehicles = await prisma.vehicle.findMany({
+    include: {
+      maintenanceLogs: true,
+      expenses: true,
+      fuelLogs: true,
+    }
+  });
+
+  let totalDistance = 0;
+  let totalFuel = 0;
+  trips.forEach(t => {
+    totalDistance += parseFloat(t.actualDistance || 0);
+    totalFuel += parseFloat(t.fuelConsumed || 0);
+  });
+  const fuelEfficiency = totalFuel > 0 ? (totalDistance / totalFuel).toFixed(2) : '0.00';
+
+  const activeVehicles = vehicles.filter(v => v.status === 'on_trip').length;
+  const fleetUtilization = vehicles.length > 0 ? ((activeVehicles / vehicles.length) * 100).toFixed(2) : '0.00';
+
+  let totalFuelCost = 0;
+  let totalMaintenanceCost = 0;
+  let totalOtherCost = 0;
+  let totalRevenue = 0;
+
+  vehicles.forEach(v => {
+    v.fuelLogs.forEach(fl => totalFuelCost += parseFloat(fl.totalCost || 0));
+    v.maintenanceLogs.forEach(ml => totalMaintenanceCost += parseFloat(ml.cost || 0));
+    v.expenses.forEach(ex => totalOtherCost += parseFloat(ex.amount || 0));
+  });
+
+  trips.forEach(t => {
+    const weight = parseFloat(t.cargoWeight || 0);
+    const distance = parseFloat(t.actualDistance || 0);
+    totalRevenue += (weight * distance * 0.05);
+  });
+
+  const operationalCost = calculateOperationalCost(totalFuelCost, totalMaintenanceCost, totalOtherCost);
+  
+  let totalAcquisitionCost = 0;
+  vehicles.forEach(v => totalAcquisitionCost += parseFloat(v.acquisitionCost || 0));
+
+  const maintAndFuel = totalMaintenanceCost + totalFuelCost;
+  const roi = totalAcquisitionCost > 0 ? (((totalRevenue - maintAndFuel) / totalAcquisitionCost) * 100).toFixed(2) : '0.00';
+
+  const vehicleCosts = vehicles.map(v => {
+    let cost = 0;
+    v.fuelLogs.forEach(fl => cost += parseFloat(fl.totalCost || 0));
+    v.maintenanceLogs.forEach(ml => cost += parseFloat(ml.cost || 0));
+    v.expenses.forEach(ex => cost += parseFloat(ex.amount || 0));
+    return { name: v.registrationNumber, cost };
+  });
+
+  vehicleCosts.sort((a, b) => b.cost - a.cost);
+  const costliestVehicles = vehicleCosts.slice(0, 5);
+
+  const currentYear = new Date().getFullYear();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthlyData = months.map(m => ({ month: m, actual: 0, projected: 0 }));
+
+  trips.forEach(t => {
+    const tripDate = t.completedAt || t.startedAt || t.createdAt;
+    if (tripDate && tripDate.getFullYear() === currentYear) {
+      const monthIdx = tripDate.getMonth();
+      const weight = parseFloat(t.cargoWeight || 0);
+      const dist = parseFloat(t.actualDistance || 0);
+      const plannedDist = parseFloat(t.plannedDistance || 0);
+      
+      const actualRev = weight * dist * 0.05;
+      const projRev = weight * plannedDist * 0.05;
+      
+      monthlyData[monthIdx].actual += actualRev;
+      monthlyData[monthIdx].projected += projRev;
+    }
+  });
+
+  return {
+    kpis: {
+      fuelEfficiency: `${fuelEfficiency} km/l`,
+      fleetUtilization: `${fleetUtilization}%`,
+      operationalCost: `₹${operationalCost.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`,
+      roi: `${roi >= 0 ? '+' : ''}${roi}%`
+    },
+    charts: {
+      monthlyRevenue: monthlyData,
+      costliestVehicles
+    },
+    raw: {
+      totalDistance,
+      totalFuel,
+      activeVehicles,
+      totalVehicles: vehicles.length,
+      totalRevenue,
+      maintAndFuel,
+      totalAcquisitionCost,
+      operationalCost,
+    }
+  };
+};
+
+module.exports = {
+  getDashboardKPIs,
+  getAnalyticsReport
 };
