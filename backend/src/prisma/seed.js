@@ -114,7 +114,7 @@ async function seedSettings() {
   await prisma.settings.create({
     data: {
       depotName: 'Central Transit Depot',
-      currency: 'USD',
+      currency: 'INR',
       distanceUnit: 'km',
       rbacMatrix: defaultRbacMatrix,
     },
