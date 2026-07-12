@@ -1,40 +1,51 @@
 import React from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const Navbar = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
+  const getInitials = (name) => {
+    return name ? name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase() : 'U';
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
-    <header className="sticky top-0 z-10 flex justify-between items-center px-6 py-3 bg-surface-container/80 backdrop-blur-md border-b border-outline-variant">
-      <div className="relative">
-        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
-        <input 
-          type="text" 
-          placeholder="Search operations..." 
-          data-element-id="global-search"
-          className="bg-surface-container-low border border-outline-variant text-on-surface text-body-sm rounded-full pl-9 pr-4 py-2 w-64 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all glow-orange"
-        />
+    <header className="sticky top-4 mx-6 z-10 flex justify-between items-center px-6 py-3 bg-surface-container-low/40 backdrop-blur-2xl border border-white/5 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.25),inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+      <div className="flex items-center gap-2">
+        {/* Search removed as requested */}
       </div>
       <div className="flex items-center gap-4">
         <button 
           onClick={toggleTheme}
-          className="text-on-surface-variant hover:text-on-surface transition-colors"
+          className="text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-xl hover:bg-surface-container/30"
           title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
         >
           <span className="material-symbols-outlined">
             {theme === 'dark' ? 'light_mode' : 'dark_mode'}
           </span>
         </button>
-        <button className="relative text-on-surface-variant hover:text-on-surface transition-colors">
+        <button className="relative text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-xl hover:bg-surface-container/30">
           <span className="material-symbols-outlined">notifications</span>
-          <span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full shimmer-glow"></span>
+          <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error border-2 border-[#150c07] rounded-full shimmer-glow"></span>
         </button>
         <div 
-          className="bg-surface-container-high border border-outline-variant text-primary px-3 py-1.5 rounded-full text-[11px] font-medium flex items-center gap-2 cursor-pointer hover:bg-surface-container transition-colors"
-          data-element-id="user-role-badge"
+          className="bg-surface-container/40 backdrop-blur-md border border-white/5 text-primary pl-2 pr-4 py-1.5 rounded-xl text-body-sm font-medium flex items-center gap-3 cursor-pointer hover:bg-surface-container/60 hover:pr-8 transition-all duration-300 shadow-sm group relative w-auto overflow-hidden"
+          onClick={handleLogout}
+          title="Logout"
         >
-          <span className="w-2 h-2 rounded-full bg-primary shimmer-glow"></span>
-          Dispatcher RK
+          <div className="w-7 h-7 rounded-lg bg-primary/20 text-primary flex items-center justify-center font-bold text-[11px] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)] shrink-0 z-10">
+            {getInitials(user?.fullName)}
+          </div>
+          <span className="truncate max-w-[150px] z-10">{user?.fullName || 'User'}</span>
+          <span className="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-all duration-300 absolute right-2 translate-x-4 group-hover:translate-x-0 text-error">logout</span>
         </div>
       </div>
     </header>

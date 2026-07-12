@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import vehicleService from '../../services/vehicleService';
 import { AlertCircle } from 'lucide-react';
+import Select from '../../components/ui/Select';
 
 const VehicleForm = ({ vehicle, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -116,16 +117,16 @@ const VehicleForm = ({ vehicle, onSave, onCancel }) => {
         </div>
         <div className="space-y-1">
           <label className="text-label-caps text-on-surface-variant font-medium">Type *</label>
-          <select 
+          <Select 
             name="type"
             value={formData.type}
             onChange={handleChange}
-            className="w-full bg-surface-container-high border border-outline rounded-lg p-2.5 text-on-surface focus:ring-primary focus:border-primary outline-none capitalize text-body-md"
+            className="w-full capitalize"
           >
             {['van', 'truck', 'lorry', 'bike', 'car', 'bus'].map(t => (
               <option key={t} value={t}>{t}</option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
 
@@ -175,16 +176,16 @@ const VehicleForm = ({ vehicle, onSave, onCancel }) => {
         </div>
         <div className="space-y-1">
           <label className="text-label-caps text-on-surface-variant font-medium">Status *</label>
-          <select 
+          <Select 
             name="status"
             value={formData.status}
             onChange={handleChange}
-            className="w-full bg-surface-container-high border border-outline rounded-lg p-2.5 text-on-surface focus:ring-primary focus:border-primary outline-none capitalize text-body-md"
+            className="w-full capitalize"
           >
             {['available', 'on_trip', 'in_shop', 'retired'].map(s => (
               <option key={s} value={s}>{s.replace('_', ' ')}</option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
 

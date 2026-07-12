@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDashboardKPIs } from '../../hooks/useDashboardKPIs';
 import FilterBar from '../../components/common/FilterBar';
+import Select from '../../components/ui/Select';
 import BentoStatCard from '../../components/common/BentoStatCard';
 import DataTable from '../../components/common/DataTable';
 import StatusPill from '../../components/common/StatusPill';
@@ -60,29 +61,29 @@ const Dashboard = () => {
         <div className="flex gap-4">
           <div className="space-y-1">
             <label className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">VEHICLE TYPE</label>
-            <select
+            <Select
               value={filters.type || ''}
               onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-              className="bg-surface-container-high text-on-surface text-body-sm rounded-lg border border-outline focus:ring-primary block p-2 outline-none w-40"
+              className="w-40"
             >
               <option value="">All Vehicles</option>
               {typeOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </select>
+            </Select>
           </div>
           <div className="space-y-1">
             <label className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">STATUS</label>
-            <select
+            <Select
               value={filters.status || ''}
               onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-              className="bg-surface-container-high text-on-surface text-body-sm rounded-lg border border-outline focus:ring-primary block p-2 outline-none w-40"
+              className="w-40"
             >
               <option value="">All Statuses</option>
               {statusOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
       </div>

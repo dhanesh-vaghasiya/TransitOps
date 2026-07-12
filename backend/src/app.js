@@ -13,8 +13,8 @@ const app = express();
 // Security HTTP headers
 app.use(helmet());
 
-// CORS
-app.use(cors({ origin: env.CLIENT_URL }));
+// CORS - allow all in dev, specific in prod
+app.use(cors({ origin: env.NODE_ENV === 'development' ? '*' : env.CLIENT_URL }));
 
 // Rate limiting
 const limiter = rateLimit({

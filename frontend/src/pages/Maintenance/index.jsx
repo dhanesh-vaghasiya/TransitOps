@@ -5,6 +5,7 @@ import DataTable from '../../components/common/DataTable';
 import StatusPill from '../../components/common/StatusPill';
 import { Wrench, HeartPulse, Info } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import Select from '../../components/ui/Select';
 
 const maintenanceTypeOptions = [
   { value: 'oil_change', label: 'Oil Change' },
@@ -160,30 +161,30 @@ const Maintenance = () => {
 
               <div>
                 <label className="block text-label-md text-on-surface mb-1">Vehicle</label>
-                <select 
+                <Select 
                   name="vehicleId" 
                   required
                   value={formData.vehicleId} 
                   onChange={handleInputChange}
-                  className="w-full bg-surface-container border border-outline-variant rounded-md px-3 py-2 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  className="w-full"
                 >
                   <option value="">Select a vehicle</option>
                   {vehicles.map(v => (
                     <option key={v.id} value={v.id}>{v.registrationNumber} - {v.name} ({v.status})</option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div>
                 <label className="block text-label-md text-on-surface mb-1">Service Type</label>
-                <select 
+                <Select 
                   name="maintenanceType" 
                   value={formData.maintenanceType} 
                   onChange={handleInputChange}
-                  className="w-full bg-surface-container border border-outline-variant rounded-md px-3 py-2 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  className="w-full"
                 >
                   {maintenanceTypeOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                </select>
+                </Select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -203,14 +204,14 @@ const Maintenance = () => {
                 </div>
                 <div>
                   <label className="block text-label-md text-on-surface mb-1">Status</label>
-                  <select 
+                  <Select 
                     name="status" 
                     value={formData.status} 
                     onChange={handleInputChange}
-                    className="w-full bg-surface-container border border-outline-variant rounded-md px-3 py-2 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                    className="w-full"
                   >
                     {statusOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                  </select>
+                  </Select>
                 </div>
               </div>
 
