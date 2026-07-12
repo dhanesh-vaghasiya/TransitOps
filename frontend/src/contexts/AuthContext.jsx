@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [settings, setSettings] = useState({
     depotName: 'Central Transit Depot',
-    currency: 'USD',
+    currency: 'INR',
     distanceUnit: 'km',
     rbacMatrix: null,
   });
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
 
   const formatCurrency = (val) => {
     if (val === undefined || val === null || isNaN(val)) return '—';
-    const c = settings?.currency || 'USD';
+    const c = settings?.currency || 'INR';
     const locale = c === 'INR' ? 'en-IN' : 'en-US';
     try {
       return new Intl.NumberFormat(locale, { style: 'currency', currency: c, maximumFractionDigits: 2 }).format(val);

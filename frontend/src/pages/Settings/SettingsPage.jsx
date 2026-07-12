@@ -34,7 +34,7 @@ const SettingsPage = () => {
     if (settings) {
       setGeneralForm({
         depotName: settings.depotName || '',
-        currency: settings.currency || 'USD',
+        currency: settings.currency || 'INR',
         distanceUnit: settings.distanceUnit || 'km',
       });
       if (settings.rbacMatrix) {
