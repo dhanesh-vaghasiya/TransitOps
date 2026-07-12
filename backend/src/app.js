@@ -44,6 +44,7 @@ app.use('/api/v1/drivers', require('./modules/driver/routes'));
 app.use('/api/v1/trips', require('./modules/trip/routes'));
 app.use('/api/v1/maintenance', require('./modules/maintenance/routes'));
 app.use('/api/v1/fuel', require('./modules/fuel/routes'));
+app.use('/api/v1/fuel-logs', require('./modules/fuel/routes'));
 app.use('/api/v1/expenses', require('./modules/expense/routes'));
 app.use('/api/v1/reports', require('./modules/report/routes'));
 

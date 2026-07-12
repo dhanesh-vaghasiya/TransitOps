@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import TripsPage from './pages/Trips/index';
+import FuelExpensePage from './pages/FuelExpense/index';
 
 
 import Login from './pages/Login';
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route index element={<Home />} />
           <Route path="trips" element={<TripsPage />} />
+          <Route path="fuel" element={<FuelExpensePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
