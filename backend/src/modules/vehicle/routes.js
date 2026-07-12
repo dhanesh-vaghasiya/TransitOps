@@ -19,21 +19,21 @@ router.get('/:id', vehicleController.getVehicleById);
 // Add auth constraints for modification
 router.post(
   '/', 
-  requireRole(['Fleet Manager', 'Admin']), 
+  requireRole(['fleet_manager', 'admin']), 
   validate(createVehicleSchema), 
   vehicleController.createVehicle
 );
 
 router.put(
   '/:id', 
-  requireRole(['Fleet Manager', 'Admin']), 
+  requireRole(['fleet_manager', 'admin']), 
   validate(updateVehicleSchema), 
   vehicleController.updateVehicle
 );
 
 router.delete(
   '/:id', 
-  requireRole(['Fleet Manager', 'Admin']), 
+  requireRole(['fleet_manager', 'admin']), 
   vehicleController.deleteVehicle
 );
 

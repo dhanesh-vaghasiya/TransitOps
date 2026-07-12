@@ -1,4 +1,4 @@
-const prisma = require('../../db');
+const prisma = require('../../config/database');
 const ApiError = require('../../utils/ApiError');
 
 const createVehicle = async (data) => {
@@ -35,7 +35,7 @@ const getVehicles = async (filters = {}) => {
 
   return await prisma.vehicle.findMany({
     where,
-    orderBy: { createdAt: 'desc' }
+    orderBy: { name: 'asc' }
   });
 };
 
@@ -89,43 +89,48 @@ const getDispatchPool = async () => {
         notIn: ['retired', 'in_shop']
       }
     },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { name: 'asc' }
   });
 };
 
 const getOperationalCost = async (id) => {
   const vehicleId = parseInt(id, 10);
-  
-  // Verify vehicle exists
-  await getVehicleById(vehicleId);
+  const vehicle = await getVehicleById(vehicleId);
 
-  const expenses = await prisma.expense.aggregate({
+  const fuelAgg = await prisma.fuelLog.aggregate({
+    _sum: { totalCost: true },
     where: { vehicleId },
-    _sum: { amount: true }
   });
 
-  const maintenance = await prisma.maintenanceLog.aggregate({
-    where: { vehicleId },
-    _sum: { cost: true }
+  const maintenanceAgg = await prisma.maintenanceLog.aggregate({
+    _sum: { cost: true },
+    where: { vehicleId, status: 'completed' },
   });
 
-  const fuel = await prisma.fuelLog.aggregate({
+  const expenseAgg = await prisma.expense.aggregate({
+    _sum: { amount: true },
     where: { vehicleId },
-    _sum: { totalCost: true }
   });
 
-  const expenseTotal = Number(expenses._sum.amount || 0);
-  const maintenanceTotal = Number(maintenance._sum.cost || 0);
-  const fuelTotal = Number(fuel._sum.totalCost || 0);
+  const totalFuelCost = parseFloat(fuelAgg._sum.totalCost) || 0;
+  const totalMaintenanceCost = parseFloat(maintenanceAgg._sum.cost) || 0;
+  const totalOtherExpenses = parseFloat(expenseAgg._sum.amount) || 0;
+
+  const totalOperationalCost = totalFuelCost + totalMaintenanceCost + totalOtherExpenses;
 
   return {
     vehicleId,
+    registrationNumber: vehicle.registrationNumber,
+    name: vehicle.name,
+    totalFuelCost,
+    totalMaintenanceCost,
+    totalOtherExpenses,
+    totalOperationalCost,
     breakdown: {
-      expenses: expenseTotal,
-      maintenance: maintenanceTotal,
-      fuel: fuelTotal
-    },
-    totalOperationalCost: expenseTotal + maintenanceTotal + fuelTotal
+      expenses: totalOtherExpenses,
+      maintenance: totalMaintenanceCost,
+      fuel: totalFuelCost
+    }
   };
 };
 

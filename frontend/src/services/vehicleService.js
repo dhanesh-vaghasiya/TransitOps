@@ -42,4 +42,13 @@ const vehicleService = {
   }
 };
 
+// Named exports for compatibility with fuel/expense pages
+export const getVehicles = (filters = {}) => {
+  return apiClient.get('/vehicles', { params: filters });
+};
+
+export const getVehicleOperationalCost = (id) => {
+  return apiClient.get(`/vehicles/${id}/operational-cost`);
+};
+
 export default vehicleService;
