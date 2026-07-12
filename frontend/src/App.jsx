@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
-
-import { AuthProvider } from './contexts/AuthContext';
+import TripsPage from './pages/Trips/index';
 import Login from './pages/Login';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Drivers from './pages/Drivers';
+import { AuthProvider } from './contexts/AuthContext';
 
-const Home = () => <div className="p-4">Dashboard (Phase 9)</div>;
+const Home = () => <div className="p-4 text-white">Dashboard (Phase 9)</div>;
 
 function App() {
   return (
@@ -18,6 +18,7 @@ function App() {
           <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route index element={<Home />} />
             <Route path="drivers" element={<Drivers />} />
+            <Route path="trips" element={<TripsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

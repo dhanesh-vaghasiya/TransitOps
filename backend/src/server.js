@@ -4,6 +4,7 @@ const app = require('./app');
 const env = require('./config/env');
 const logger = require('./config/logger');
 const prisma = require('./config/database');
+const socketConfig = require('./config/socket');
 
 const server = http.createServer(app);
 
@@ -14,6 +15,9 @@ const io = new Server(server, {
   },
 });
 app.set('io', io);
+
+// Register io singleton so services can emit events
+socketConfig.setIo(io);
 
 io.on('connection', (socket) => {
   logger.info(`Socket connected: ${socket.id}`);
