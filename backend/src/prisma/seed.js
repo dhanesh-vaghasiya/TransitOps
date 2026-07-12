@@ -233,9 +233,9 @@ async function seedOperations(vehicles, drivers) {
     await prisma.trip.upsert({ where: { tripNumber: histTrip.tripNumber }, update: histTrip, create: histTrip });
   }
 
-  const tr1 = await prisma.trip.findUnique({ where: { tripNumber: 'TR-2026-001' }});
-  const tr2 = await prisma.trip.findUnique({ where: { tripNumber: 'TR-2026-002' }});
-  const tr8 = await prisma.trip.findUnique({ where: { tripNumber: 'TR-2026-008' }});
+  const tr1 = await prisma.trip.findUnique({ where: { tripNumber: 'TR-2026-001' } });
+  const tr2 = await prisma.trip.findUnique({ where: { tripNumber: 'TR-2026-002' } });
+  const tr8 = await prisma.trip.findUnique({ where: { tripNumber: 'TR-2026-008' } });
 
   // Maintenance Logs
   await prisma.maintenanceLog.upsert({
@@ -279,7 +279,7 @@ async function seedOperations(vehicles, drivers) {
     where: { expenseNumber: 'EX-302' }, update: {},
     create: { expenseNumber: 'EX-302', tripId: tr2.id, vehicleId: tr2.vehicleId, category: 'toll', amount: '45.00', description: 'Highway toll.', incurredAt: tr2.startedAt }
   });
-  
+
   await prisma.expense.upsert({
     where: { expenseNumber: 'EX-303' }, update: {},
     create: { expenseNumber: 'EX-303', tripId: null, vehicleId: getV('BUS-01'), category: 'insurance', amount: '1200.00', description: 'Annual Insurance Renewal', incurredAt: new Date(Date.now() - 86400000 * 30) }
@@ -290,14 +290,14 @@ async function seedOperations(vehicles, drivers) {
     const daysAgo = 90 - (i * 2);
     await prisma.fuelLog.upsert({
       where: { receiptNumber: `FL-HIST-${i}` }, update: {},
-      create: { 
-        receiptNumber: `FL-HIST-${i}`, 
-        vehicleId: getV(i % 2 === 0 ? 'VAN-05' : 'TRUCK-11'), 
-        liters: (30 + (i % 5) * 10).toString(), 
-        costPerLiter: (1.40 + (i % 10) * 0.01).toFixed(2), 
-        totalCost: ((30 + (i % 5) * 10) * (1.40 + (i % 10) * 0.01)).toFixed(2), 
-        odometerReading: (40000 + i * 250).toString(), 
-        loggedAt: new Date(Date.now() - 86400000 * daysAgo) 
+      create: {
+        receiptNumber: `FL-HIST-${i}`,
+        vehicleId: getV(i % 2 === 0 ? 'VAN-05' : 'TRUCK-11'),
+        liters: (30 + (i % 5) * 10).toString(),
+        costPerLiter: (1.40 + (i % 10) * 0.01).toFixed(2),
+        totalCost: ((30 + (i % 5) * 10) * (1.40 + (i % 10) * 0.01)).toFixed(2),
+        odometerReading: (40000 + i * 250).toString(),
+        loggedAt: new Date(Date.now() - 86400000 * daysAgo)
       }
     });
   }
@@ -308,13 +308,13 @@ async function seedOperations(vehicles, drivers) {
     const daysAgo = 85 - (i * 2);
     await prisma.expense.upsert({
       where: { expenseNumber: `EX-HIST-${i}` }, update: {},
-      create: { 
-        expenseNumber: `EX-HIST-${i}`, 
-        vehicleId: getV(i % 3 === 0 ? 'BUS-01' : (i % 2 === 0 ? 'CAR-07' : 'VAN-05')), 
-        category: categories[i % categories.length], 
-        amount: (15 + (i % 8) * 12.5).toFixed(2), 
-        description: `Operational historic expense ${i}`, 
-        incurredAt: new Date(Date.now() - 86400000 * daysAgo) 
+      create: {
+        expenseNumber: `EX-HIST-${i}`,
+        vehicleId: getV(i % 3 === 0 ? 'BUS-01' : (i % 2 === 0 ? 'CAR-07' : 'VAN-05')),
+        category: categories[i % categories.length],
+        amount: (15 + (i % 8) * 12.5).toFixed(2),
+        description: `Operational historic expense ${i}`,
+        incurredAt: new Date(Date.now() - 86400000 * daysAgo)
       }
     });
   }
