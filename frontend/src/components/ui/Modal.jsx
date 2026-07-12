@@ -43,24 +43,26 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
       aria-labelledby="modal-title"
     >
       <div
-        className={`relative w-full ${sizeClasses[size]} mx-4 glass-card border border-outline-variant shadow-2xl animate-fade-in`}
+        className={`relative w-full ${sizeClasses[size]} mx-4 bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden animate-fade-in`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-outline-variant">
-          <h2 id="modal-title" className="text-headline-md text-on-background font-outfit">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant">
+          <h2 id="modal-title" className="text-xl font-bold text-on-surface">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="text-on-surface-variant hover:text-on-surface transition-colors rounded-lg p-1"
+            className="text-on-surface-variant hover:text-on-surface transition-colors"
             aria-label="Close modal"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
         {/* Body */}
-        <div className="px-5 py-4">
+        <div className="p-6">
           {children}
         </div>
       </div>
