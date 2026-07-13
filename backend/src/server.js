@@ -4,9 +4,12 @@ const app = require('./app');
 const logger = require('./config/logger');
 const prisma = require('./config/database');
 const socketConfig = require('./config/socket');
-const nodeEnv = process.env.NODE_ENV || 'development';
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
-const port = process.env.PORT || 5000;
+
+// Load and validate environment variables
+const env = require('./config/env');
+const nodeEnv = env.NODE_ENV;
+const clientUrl = env.CLIENT_URL;
+const port = parseInt(env.PORT, 10);
 
 const server = http.createServer(app);
 
@@ -32,14 +35,16 @@ io.on('connection', (socket) => {
 async function start() {
   try {
     await prisma.$connect();
-    logger.info('Database connected successfully');
+    logger.info('✅ Database connected successfully');
   } catch (err) {
-    logger.error(`Database connection failed: ${err.message}`);
+    logger.error(`❌ Database connection failed: ${err.message}`);
+    logger.error(`Make sure DATABASE_URL is set correctly in your environment variables.`);
+    logger.error(`Current DATABASE_URL: ${env.DATABASE_URL ? '[SET]' : '[NOT SET]'}}`);
     process.exit(1);
   }
 
-  server.listen(port, () => {
-    logger.info(`Server listening on port ${port} in ${nodeEnv} mode`);
+  server.listen(port, '0.0.0.0', () => {
+    logger.info(`✅ Server listening on port ${port} in ${nodeEnv} mode`);
   });
 }
 

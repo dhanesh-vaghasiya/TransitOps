@@ -8,8 +8,11 @@ const logger = require('./config/logger');
 // Import routes here later
 
 const app = express();
-const nodeEnv = process.env.NODE_ENV || 'development';
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+
+// Load and validate environment variables
+const env = require('./config/env');
+const nodeEnv = env.NODE_ENV;
+const clientUrl = env.CLIENT_URL;
 
 // Security HTTP headers
 app.use(helmet());
